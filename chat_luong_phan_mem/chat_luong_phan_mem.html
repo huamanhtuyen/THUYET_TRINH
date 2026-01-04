@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chỉ số chất lượng phần mềm</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="max-w-6xl mx-auto p-6 space-y-10">
+    <h1 class="text-3xl font-bold text-center mb-8">📊 Chỉ số chất lượng phần mềm</h1>
+
+    <!-- Rò rỉ lỗi -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-xl font-semibold mb-4">Rò rỉ lỗi (Defect Leakage)</h2>
+      <canvas id="leakageChart"></canvas>
+      <p class="mt-4 text-sm text-gray-600">
+        <strong>Ý nghĩa:</strong> Rò rỉ lỗi đo số lượng lỗi bị phát hiện sau khi bàn giao hoặc triển khai. Giá trị càng thấp chứng tỏ kiểm thử trước khi bàn giao càng hiệu quả.
+      </p>
+      <p class="mt-2 text-sm text-gray-700"><strong>Phân tích:</strong> Dự án A có số lỗi rò rỉ nhiều hơn dự án B và C. Điều này cho thấy quy trình kiểm thử của A cần được cải thiện, đặc biệt là ở giai đoạn tích hợp.</p>
+    </div>
+
+    <!-- Hiệu suất loại bỏ lỗi -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-xl font-semibold mb-4">Hiệu suất loại bỏ lỗi (DRE)</h2>
+      <canvas id="dreChart"></canvas>
+      <p class="mt-4 text-sm text-gray-600">
+        <strong>Ý nghĩa:</strong> Hiệu suất loại bỏ lỗi (Defect Removal Efficiency) = số lỗi tìm được trước khi bàn giao / tổng số lỗi. Chỉ số này cho thấy khả năng “làm sạch” lỗi của nhóm kiểm thử.
+      </p>
+      <p class="mt-2 text-sm text-gray-700"><strong>Phân tích:</strong> Dự án C đạt DRE cao nhất (~95%), phản ánh khả năng kiểm soát chất lượng tốt. Dự án A thấp nhất (~85%), tiềm ẩn nguy cơ lỗi sau triển khai.</p>
+    </div>
+
+    <!-- Độ bao phủ kiểm thử -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-xl font-semibold mb-4">Độ bao phủ kiểm thử (Coverage C0/C1)</h2>
+      <canvas id="coverageChart"></canvas>
+      <p class="mt-4 text-sm text-gray-600">
+        <strong>Ý nghĩa:</strong> 
+        <ul class="list-disc list-inside">
+          <li><strong>C0 (Độ bao phủ câu lệnh):</strong> tỷ lệ số dòng code đã chạy qua ít nhất một lần.</li>
+          <li><strong>C1 (Độ bao phủ nhánh):</strong> tỷ lệ các nhánh (điều kiện if/else) đã được kiểm thử.</li>
+        </ul>
+      </p>
+      <p class="mt-2 text-sm text-gray-700"><strong>Phân tích:</strong> C0 thường cao hơn C1 vì dễ đạt hơn. Ở đây C1 chỉ khoảng 70%, nghĩa là vẫn còn nhiều nhánh logic chưa được kiểm thử, cần bổ sung ca kiểm thử.</p>
+    </div>
+
+    <!-- Mật độ ca kiểm thử -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-xl font-semibold mb-4">Mật độ ca kiểm thử</h2>
+      <canvas id="tcdChart"></canvas>
+      <p class="mt-4 text-sm text-gray-600">
+        <strong>Ý nghĩa:</strong> Mật độ ca kiểm thử cho biết trung bình mỗi đơn vị (yêu cầu, điểm câu chuyện, điểm chức năng) có bao nhiêu ca kiểm thử.
+        <ul class="list-disc list-inside">
+          <li><strong>Theo Yêu cầu:</strong> số ca kiểm thử / số yêu cầu.</li>
+          <li><strong>Theo Điểm câu chuyện (Agile):</strong> số ca kiểm thử / tổng story point.</li>
+          <li><strong>Theo Điểm chức năng (FP):</strong> số ca kiểm thử / function point.</li>
+        </ul>
+      </p>
+      <p class="mt-2 text-sm text-gray-700"><strong>Phân tích:</strong> Mật độ test theo yêu cầu (6) khá cao, nhưng tính theo điểm câu chuyện (2) lại thấp. Điều này cho thấy có thể phân bổ test chưa đều theo độ phức tạp Agile.</p>
+      <p class="mt-2 text-sm text-gray-700"><strong>Giải thích về độ phức tạp Agile:</strong> Trong Agile, mỗi tính năng hoặc user story được gán <em>story point</em> để phản ánh khối lượng công việc, mức độ khó khăn và rủi ro. Ví dụ, một chức năng đơn giản có thể chỉ 1-2 điểm, trong khi tính năng phức tạp có thể từ 8-13 điểm. Do đó, nếu số ca kiểm thử không tăng theo đúng độ phức tạp (story point), thì có thể dẫn đến tình trạng những tính năng khó vẫn chưa được kiểm thử đầy đủ.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // Biểu đồ Rò rỉ lỗi
+    new Chart(document.getElementById('leakageChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Dự án A', 'Dự án B', 'Dự án C'],
+        datasets: [{
+          label: 'Số lỗi rò rỉ',
+          data: [8, 3, 4],
+          backgroundColor: ['#f87171', '#60a5fa', '#34d399']
+        }]
+      }
+    });
+
+    // Biểu đồ Hiệu suất loại bỏ lỗi
+    new Chart(document.getElementById('dreChart'), {
+      type: 'line',
+      data: {
+        labels: ['Dự án A', 'Dự án B', 'Dự án C'],
+        datasets: [{
+          label: 'DRE (%)',
+          data: [85, 90, 95],
+          borderColor: '#6366f1',
+          fill: false,
+          tension: 0.3
+        }]
+      }
+    });
+
+    // Biểu đồ Độ bao phủ
+    new Chart(document.getElementById('coverageChart'), {
+      type: 'bar',
+      data: {
+        labels: ['C0 - Câu lệnh', 'C1 - Nhánh'],
+        datasets: [{
+          label: 'Độ bao phủ (%)',
+          data: [85, 70],
+          backgroundColor: ['#facc15', '#4ade80']
+        }]
+      }
+    });
+
+    // Biểu đồ Mật độ ca kiểm thử
+    new Chart(document.getElementById('tcdChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Yêu cầu', 'Điểm câu chuyện', 'Điểm chức năng'],
+        datasets: [{
+          label: 'Mật độ ca kiểm thử',
+          data: [6, 2, 4],
+          borderColor: '#ec4899',
+          backgroundColor: 'rgba(236, 72, 153, 0.3)'
+        }]
+      },
+      options: {
+        scales: {
+          r: {
+            suggestedMin: 0,
+            suggestedMax: 8
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

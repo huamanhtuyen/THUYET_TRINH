@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quy trình sửa lỗi phần mềm toàn diện</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            display: none;
+            min-height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        h2 i {
+            margin-right: 15px;
+            color: #3498db;
+        }
+
+        .step-icon {
+            font-size: 3em;
+            color: #3498db;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #34495e;
+        }
+
+        .example {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #fff9c4 0%, #ffeb3b 100%);
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+            border: 2px solid #ffeb3b;
+        }
+
+        .pie-chart-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(#ff6384 0% 27.5%, #36a2eb 27.5% 82.5%, #cc65fe 82.5% 100%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-legend {
+            list-style: none;
+            padding: 0;
+        }
+
+        .chart-legend li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5em;
+            color: #3498db;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .decorative-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .decorative-shape:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .decorative-shape:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .decorative-shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .pie-chart-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .pie-chart {
+                width: 150px;
+                height: 150px;
+            }
+
+            .navigation {
+                bottom: 20px;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-counter">1 / 11</div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" disabled><i class="fas fa-chevron-left"></i></button>
+        <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Slide 1: Title -->
+    <div class="slide active" id="slide1">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h1>Quy trình sửa lỗi phần mềm toàn diện</h1>
+        <div class="step-icon">
+            <i class="fas fa-bug"></i>
+        </div>
+        <p>Quy trình sửa lỗi không chỉ đơn giản là sửa một dòng mã nguồn. Nó đòi hỏi một cách tiếp cận có hệ thống, bao gồm việc thu thập thông tin, tái hiện, sửa chữa, kiểm thử toàn diện và đánh giá tác động. Việc này giúp đảm bảo chất lượng phần mềm và tránh các lỗi mới phát sinh. Ngoài ra, việc kiểm thử trên nhiều môi trường hệ điều hành khác nhau là rất quan trọng để đảm bảo tính tương thích và ổn định.</p>
+    </div>
+
+    <!-- Slide 2: Mô tả lỗi -->
+    <div class="slide" id="slide2">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2><i class="fas fa-file-alt"></i>1. Tài liệu mô tả lỗi</h2>
+        <div class="step-icon">
+            <i class="fas fa-search"></i>
+        </div>
+        <p>Đây là bước đầu tiên và quan trọng nhất. Bạn cần thu thập và ghi chép chi tiết về lỗi, bao gồm triệu chứng, điều kiện xảy ra, và tác động của nó đến người dùng hoặc hệ thống.</p>
+        <div class="example">
+            <strong>Ví dụ:</strong> Ứng dụng web không hiển thị đúng trên thiết bị di động. Mô tả: Khi truy cập từ điện thoại, menu điều hướng bị chồng lên nội dung chính, khiến người dùng không thể tương tác với các liên kết.
+        </div>
+    </div>
+
+    <!-- Slide 3: Tái hiện lỗi -->
+    <div class="slide" id="slide3">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2><i class="fas fa-play-circle"></i>2. Cách tái hiện lỗi</h2>
+        <div class="step-icon">
+            <i class="fas fa-redo"></i>
+        </div>
+        <p>Mô tả các bước cụ thể để tái tạo lỗi một cách nhất quán. Điều này giúp xác nhận lỗi và kiểm tra sau khi sửa.</p>
+        <div class="example">
+            <strong>Ví dụ:</strong>
+            <ol>
+                <li>Mở trình duyệt trên thiết bị di động (ví dụ: Chrome trên Android).</li>
+                <li>Truy cập URL của ứng dụng.</li>
+                <li>Thay đổi kích thước cửa sổ hoặc xoay màn hình.</li>
+                <li>Quan sát menu điều hướng bị chồng lên nội dung.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Slide 4: Testcase tái hiện -->
+    <div class="slide" id="slide4">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2><i class="fas fa-vial"></i>3. Testcase tái hiện lỗi</h2>
+        <div class="step-icon">
+            <i class="fas fa-flask"></i>
+        </div>
+        <p>Tạo các testcase tự động hoặc thủ công để tái hiện lỗi một cách đáng tin cậy.</p>
+        <div class="example">
+            <strong>Ví dụ:</strong> Testcase: "Kiểm tra hiển thị menu trên mobile"
+            <ul>
+                <li>Điều kiện: Trình duyệt Chrome, thiết bị Android với độ phân giải 1080x1920.</li>
+                <li>Bước: Thực hiện các bước tái hiện ở trên.</li>
+                <li>Kết quả mong đợi: Menu hiển thị đúng vị trí.</li>
+                <li>Kết quả thực tế: Menu bị chồng lên.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 5: Cách sửa lỗi -->
+    <div class="slide" id="slide5">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2><i class="fas fa-wrench"></i>4. Cách sửa lỗi</h2>
+        <div class="step-icon">
+            <i class="fas fa-tools"></i>
+        </div>
+        <p>Phân tích nguyên nhân gốc và thực hiện sửa chữa. Điều này có thể bao gồm thay đổi mã, cấu hình hoặc kiến trúc.</p>
+        <div class="example">
+            <strong>Ví dụ:</strong> Nguyên nhân: CSS không responsive. Sửa: Thêm media queries và sử dụng flexbox cho layout responsive.
+            <pre><code>
+@media (max-width: 768px) {
+    .menu { flex-direction: column; }
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- Slide 6: Testcase sửa lỗi -->
+    <div class="slide" id="slide6">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2><i class="fas fa-check-circle"></i>5. Testcase sửa lỗi</h2>
+        <div class="step-icon">
+            <i class="fas fa-thumbs-up"></i>
+        </div>
+        <p>Kiểm tra xem sửa chữa có giải quyết được lỗi không.</p>
+        <div class="example">
+            <strong>Ví dụ:</strong> Chạy lại testcase tái hiện, nhưng lần này kết quả phải là "PASS" - menu hiển thị đúng trên mobile.
+        </div>
+    </div>
+
+    <!-- Slide 7: Kiểm tra lỗi tương tự -->
+    <div class="slide" id="slide7">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2><i class="fas fa-search-plus"></i>6. Cách kiểm tra lỗi tương tự</h2>
+        <div class="step-icon">
+            <i class="fas fa-binoculars"></i>
+        </div>
+        <p>Tìm kiếm và kiểm tra các lỗi tương tự có thể tồn tại trong codebase.</p>
+        <div class="example">
+            <strong>Ví dụ:</strong> Tìm kiếm các thành phần UI khác không responsive, như footer hoặc sidebar, và kiểm tra trên các thiết bị khác nhau.
+        </div>
+    </div>
+
+    <!-- Slide 8: Testcase similar bug -->
+    <div class="slide" id="slide8">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2><i class="fas fa-clone"></i>7. Testcase kiểm tra similar bug</h2>
+        <div class="step-icon">
+            <i class="fas fa-copy"></i>
+        </div>
+        <p>Tạo testcase cho các lỗi tiềm năng tương tự.</p>
+        <div class="example">
+            <strong>Ví dụ:</strong> Testcase: "Kiểm tra responsive của footer"
+            <ul>
+                <li>Kiểm tra footer trên tablet và desktop.</li>
+                <li>Đảm bảo không có chồng lấn tương tự.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 9: Check degrade -->
+    <div class="slide" id="slide9">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2><i class="fas fa-chart-line"></i>8. Cách check ảnh hưởng của việc sửa lỗi</h2>
+        <div class="step-icon">
+            <i class="fas fa-tachometer-alt"></i>
+        </div>
+        <p>Đánh giá xem sửa chữa có gây ra lỗi mới hoặc làm giảm hiệu suất không.</p>
+        <div class="example">
+            <strong>Ví dụ:</strong> Kiểm tra hiệu suất tải trang sau khi thêm CSS mới, đảm bảo không tăng thời gian tải quá 10%.
+        </div>
+    </div>
+
+    <!-- Slide 10: Testcase degrade -->
+    <div class="slide" id="slide10">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2><i class="fas fa-exclamation-triangle"></i>9. Testcase degrade</h2>
+        <div class="step-icon">
+            <i class="fas fa-warning"></i>
+        </div>
+        <p>Testcase để phát hiện các degrade bug.</p>
+        <div class="example">
+            <strong>Ví dụ:</strong> Testcase hiệu suất: Đo thời gian tải trang trước và sau sửa chữa trên các thiết bị khác nhau.
+        </div>
+    </div>
+
+    <!-- Slide 11: Kết luận và phân bổ effort -->
+    <div class="slide" id="slide11">
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <div class="decorative-shape"></div>
+        <h2 style="margin-top: 40px;"><i class="fas fa-chart-pie"></i>Phân bổ effort trong quy trình sửa lỗi</h2>
+        <p>Trong quy trình sửa lỗi toàn diện, việc sửa code chỉ chiếm khoảng <strong>25-30%</strong> effort tổng thể. Phần lớn effort (<strong>50-60%</strong>) được dành cho việc test để đảm bảo chất lượng, bao gồm tái hiện lỗi, kiểm tra sửa chữa, phát hiện lỗi tương tự và kiểm tra degrade bug. Phần còn lại (10-15%) dành cho phân tích, tài liệu và đánh giá tác động.</p>
+        <div class="pie-chart-container">
+            <div class="pie-chart"></div>
+            <ul class="chart-legend">
+                <li><span class="color-box" style="background-color: #ff6384;"></span> Sửa code: 25-30%</li>
+                <li><span class="color-box" style="background-color: #36a2eb;"></span> Test và kiểm tra: 50-60%</li>
+                <li><span class="color-box" style="background-color: #cc65fe;"></span> Phân tích & tài liệu: 10-15%</li>
+            </ul>
+        </div>
+        <h2><i class="fas fa-trophy"></i>Kết luận: Tính toàn diện của quy trình</h2>
+        <div class="step-icon">
+            <i class="fas fa-star"></i>
+        </div>
+        <p class="highlight">Sửa lỗi không chỉ là thay đổi một dòng mã. Nó đòi hỏi sự cẩn thận, kiểm thử toàn diện trên nhiều môi trường hệ điều hành (Windows, macOS, Linux, iOS, Android), và đánh giá tác động lâu dài. Việc bỏ qua bất kỳ bước nào có thể dẫn đến lỗi tái phát hoặc vấn đề mới. Luôn ưu tiên chất lượng và trải nghiệm người dùng.</p>
+        <p>Để đảm bảo, hãy kiểm thử trên:
+        <ul>
+            <li>Các phiên bản trình duyệt khác nhau (Chrome, Firefox, Safari, Edge).</li>
+            <li>Các hệ điều hành: Windows 10/11, macOS, Linux, iOS, Android.</li>
+            <li>Các thiết bị: Desktop, laptop, tablet, smartphone.</li>
+        </ul>
+        </p>
+
+      
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 11;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const counter = document.querySelector('.slide-counter');
+
+        function updateSlide() {
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(`slide${currentSlide}`).classList.add('active');
+            counter.textContent = `${currentSlide} / ${totalSlides}`;
+            prevBtn.disabled = currentSlide === 1;
+            nextBtn.disabled = currentSlide === totalSlides;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            } else if (e.key === 'ArrowRight' && currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        });
+
+        // Touch navigation for mobile
+        let startX = 0;
+        document.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const endX = e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0 && currentSlide < totalSlides) {
+                    currentSlide++;
+                    updateSlide();
+                } else if (diffX < 0 && currentSlide > 1) {
+                    currentSlide--;
+                    updateSlide();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
