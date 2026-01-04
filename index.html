@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mục lục Thuyết trình - Hứa Mạnh Tuyển</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #ffffff;
+      padding: 40px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    
+    .author {
+      font-size: 1.3rem;
+      color: #f39c12;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+    
+    .author span {
+      color: #ffffff;
+    }
+    
+    .subtitle {
+      color: #bdc3c7;
+      font-size: 0.95rem;
+      margin-top: 8px;
+    }
+    
+    .filter-section {
+      padding: 25px 40px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .filter-wrapper {
+      position: relative;
+    }
+    
+    .filter-input {
+      width: 100%;
+      padding: 14px 20px 14px 50px;
+      font-size: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 1.2rem;
+    }
+    
+    .menu-section {
+      padding: 30px 40px;
+    }
+    
+    .section-title {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .menu-list {
+      list-style: none;
+    }
+    
+    .menu-item {
+      margin-bottom: 12px;
+    }
+    
+    .menu-link {
+      display: flex;
+      align-items: center;
+      padding: 18px 25px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #333;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+    
+    .menu-link:hover {
+      background: #667eea;
+      color: #ffffff;
+      border-left-color: #f39c12;
+      transform: translateX(8px);
+    }
+    
+    .menu-link .icon {
+      margin-right: 15px;
+      font-size: 1.4rem;
+    }
+    
+    .menu-link .arrow {
+      margin-left: auto;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .menu-link:hover .arrow {
+      opacity: 1;
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-size: 1.1rem;
+      display: none;
+    }
+    
+    .no-results.show {
+      display: block;
+    }
+    
+    .footer {
+      padding: 25px;
+      text-align: center;
+      background: #f8f9fa;
+      color: #999;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 1.6rem;
+      }
+      
+      .header, .filter-section, .menu-section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📑 Mục lục Thuyết trình</h1>
+      <div class="author">👤 <span>Hứa Mạnh Tuyển</span></div>
+      <div class="subtitle">Chọn chủ đề bên dưới để bắt đầu thuyết trình</div>
+    </div>
+    
+    <div class="filter-section">
+      <div class="filter-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="filter-input" id="filterInput" placeholder="Tìm kiếm chủ đề...">
+      </div>
+    </div>
+    
+    <div class="menu-section">
+      <div class="section-title">📂 Các trang thuyết trình</div>
+      <ul class="menu-list" id="menuList">
+        <li class="menu-item">
+          <a href="mẫu thiết kê.html" class="menu-link">
+            <span class="icon">🏗️</span>
+            <span class="text">Kiến trúc hệ thống – Thủ tục hành chính liên thông</span>
+            <span class="arrow">→</span>
+          </a>
+        </li>
+        <!-- Thêm các trang mới ở đây -->
+        <!--
+        <li class="menu-item">
+          <a href="trang-moi.html" class="menu-link">
+            <span class="icon">📄</span>
+            <span class="text">Tên trang mới</span>
+            <span class="arrow">→</span>
+          </a>
+        </li>
+        -->
+      </ul>
+      <div class="no-results" id="noResults">
+        Không tìm thấy chủ đề phù hợp
+      </div>
+    </div>
+    
+    <div class="footer">
+      Nhấn vào các mục để chuyển đến trang thuyết trình tương ứng
+    </div>
+  </div>
+
+  <script>
+    const filterInput = document.getElementById('filterInput');
+    const menuItems = document.querySelectorAll('.menu-item');
+    const noResults = document.getElementById('noResults');
+    
+    filterInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase().trim();
+      let visibleCount = 0;
+      
+      menuItems.forEach(item => {
+        const text = item.querySelector('.text').textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+          item.style.display = 'block';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      
+      if (visibleCount === 0) {
+        noResults.classList.add('show');
+      } else {
+        noResults.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>
