@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kiến trúc hệ thống – Thủ tục hành chính liên thông</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "default",
+      securityLevel: "loose"
+    });
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 40px;
+      background: #f4f6f8;
+    }
+    h1 {
+      text-align: center;
+    }
+    h2 {
+      margin-top: 60px;
+      color: #2c3e50;
+    }
+    .diagram {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    .note {
+      margin-top: 10px;
+      color: #555;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>So sánh kiến trúc hệ thống<br/>Thủ tục hành chính liên thông</h1>
+
+<!-- ================= MONOLITH ================= -->
+<h2>1️⃣ Monolith</h2>
+<div class="diagram">
+<pre class="mermaid">
+flowchart TD
+    User[Người dân / Doanh nghiệp]
+    User --> App[Monolith Application]
+
+    App --> DK[Đăng kiểm xe cơ giới]
+    App --> YT[Cấp phép nhập khẩu TBYT]
+    App --> HQ[Hải quan - Mở tờ khai XNK]
+
+    DK --> DB[(Single Database)]
+    YT --> DB
+    HQ --> DB
+
+    DK --> HQ
+    YT --> HQ
+</pre>
+</div>
+<div class="note">
+Mọi nghiệp vụ dùng chung DB, Hải quan đọc trực tiếp kết quả 2 thủ tục còn lại.
+</div>
+
+<!-- ================= MODULAR MONOLITH ================= -->
+<h2>2️⃣ Modular Monolith</h2>
+<div class="diagram">
+<pre class="mermaid">
+flowchart TD
+    User[Người dân / Doanh nghiệp]
+    User --> App[Modular Monolith Application]
+
+    subgraph DK_Module[Module Đăng kiểm xe cơ giới]
+        DK1[Tiếp nhận]
+        DK2[Thẩm định]
+        DK3[Kết quả đăng kiểm]
+    end
+
+    subgraph YT_Module[Module Cấp phép TBYT]
+        YT1[Tiếp nhận]
+        YT2[Thẩm định]
+        YT3[Kết quả cấp phép]
+    end
+
+    subgraph HQ_Module[Module Hải quan]
+        HQ1[Tiếp nhận hồ sơ]
+        HQ2[Kiểm tra điều kiện]
+        HQ3[Mở tờ khai XNK]
+    end
+
+    App --> DK_Module
+    App --> YT_Module
+    App --> HQ_Module
+
+    DK_Module --> HQ_Module
+    YT_Module --> HQ_Module
+
+    DK_Module --> DB[(Shared Database)]
+    YT_Module --> DB
+    HQ_Module --> DB
+</pre>
+</div>
+<div class="note">
+1 ứng dụng – module Hải quan chỉ giao tiếp qua interface, không truy cập bảng nội bộ module khác.
+</div>
+
+<!-- ================= DISTRIBUTED MODULAR ================= -->
+<h2>3️⃣ Distributed Modular</h2>
+<div class="diagram">
+<pre class="mermaid">
+flowchart TD
+    User[Người dân / Doanh nghiệp]
+
+    User --> DK_S[Server Đăng kiểm]
+    User --> YT_S[Server Cấp phép TBYT]
+    User --> HQ_S[Server Hải quan]
+
+    DK_S --> DB[(Shared Government Database)]
+    YT_S --> DB
+    HQ_S --> DB
+
+    HQ_S <-->|HTTP / SOAP| DK_S
+    HQ_S <-->|HTTP / SOAP| YT_S
+</pre>
+</div>
+<div class="note">
+Hải quan gọi trực tiếp 2 hệ thống còn lại, phụ thuộc mạng và DB chung → dễ lỗi dây chuyền.
+</div>
+
+<!-- ================= MICROSERVICE ================= -->
+<h2>4️⃣ Microservice</h2>
+<div class="diagram">
+<pre class="mermaid">
+flowchart TD
+    User[Người dân / Doanh nghiệp]
+
+    User --> DK_API[Đăng kiểm Service]
+    User --> YT_API[Cấp phép TBYT Service]
+    User --> HQ_API[Hải quan Service]
+
+    DK_API --> DK_DB[(Đăng kiểm DB)]
+    YT_API --> YT_DB[(TBYT DB)]
+    HQ_API --> HQ_DB[(Hải quan DB)]
+
+    DK_API -->|Event: VehicleApproved| BUS[Event Bus]
+    YT_API -->|Event: MedicalDeviceApproved| BUS
+
+    BUS --> HQ_API
+</pre>
+</div>
+<div class="note">
+Hải quan chỉ lắng nghe sự kiện hợp lệ → không gọi đồng bộ, không phụ thuộc uptime.
+</div>
+
+</body>
+</html>
