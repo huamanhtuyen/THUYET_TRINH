@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phần Mềm Họp Thông Minh - AI-First Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0066cc;
+            border-bottom: 3px solid #0066cc;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h2 {
+            color: #0066cc;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #0066cc;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .ai-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .ai-demo h3 {
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        .chat-box {
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 15px;
+            min-height: 300px;
+            overflow-y: auto;
+        }
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .user-msg {
+            background-color: rgba(255,255,255,0.2);
+            text-align: right;
+            margin-left: 40px;
+        }
+        .ai-msg {
+            background-color: rgba(0,0,0,0.2);
+            margin-right: 40px;
+        }
+        .ai-thinking {
+            font-size: 0.9em;
+            opacity: 0.8;
+            font-style: italic;
+            padding-left: 20px;
+            border-left: 2px solid rgba(255,255,255,0.5);
+            margin: 5px 0;
+        }
+        .ai-answer {
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        .meeting-detail {
+            background-color: rgba(255,255,255,0.1);
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+        .meeting-detail strong {
+            display: block;
+            margin-top: 5px;
+        }
+        .image-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        .ai-suggestions {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 4px;
+            border-left: 3px solid #ffc107;
+        }
+        .ai-suggestions strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        .ai-suggestions ul {
+            margin-left: 20px;
+            margin-bottom: 0;
+        }
+        .ai-suggestions li {
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            list-style: none;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px;
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            color: white;
+            font-size: 1em;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .chat-input-area input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.6);
+            background-color: rgba(255,255,255,0.15);
+        }
+        .send-btn {
+            padding: 12px 25px;
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .send-btn:hover {
+            background-color: #ffb300;
+        }
+        .send-btn:active {
+            background-color: #ff9800;
+        }
+        .suggestion-btn {
+            background-color: transparent;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+            width: 100%;
+            text-align: left;
+        }
+        .suggestion-btn:hover {
+            background-color: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📅 PHẦN MỀM HỌP THÔNG MINH</h1>
+        <p style="text-align: center; font-style: italic; color: #666; margin-bottom: 30px;">
+            Tài liệu mô tả chức năng Theo dõi lịch họp trước và sau khi triển khai AI-First
+        </p>
+
+        <!-- Section I -->
+        <div class="section">
+            <h2>I. TRƯỚC KHI TRIỂN KHAI AI-FIRST</h2>
+            
+            <p>Xem xét với đối tượng là công chức tại phòng chuyên môn trong cơ quan:</p>
+            
+            <ul>
+                <li>Phần mềm họp thông minh hiện tại được thiết kế có 3 loại lịch họp: Lịch lãnh đạo, Lịch đơn vị, Lịch cá nhân;</li>
+                <li>Lịch họp cá nhân thể hiện được các cuộc họp của công chức đang đăng nhập;</li>
+                <li>Lịch họp đơn vị chưa thể hiện được công chức có phải tham gia hay không. Trong thực tế có những cuộc họp của đơn vị mà công chức không tham gia hoặc phải tham gia tùy nội dung cuộc họp;</li>
+                <li>Lịch lãnh đạo đang thể hiện các cuộc họp của lãnh đạo chủ trì, bao hàm trong đó có sự tham gia của nhiều đơn vị con và một số công chức thuộc văn phòng đơn vị có nhiệm vụ làm giúp việc/thư ký lãnh đạo.</li>
+            </ul>
+
+            <p><strong>Kịch bản:</strong> Một công chức thuộc phòng chức năng chuyên môn tại thời điểm thứ 5 của tuần này cần theo dõi lịch họp phải tham gia vào thứ 3 tuần sau đó (vì nhớ ra thứ 3 tuần sau đó phải đi xử lý công việc nào đó). Trước khi triển khai các tính năng AI-First, công chức có thể theo dõi lịch họp thông qua các bước như sau:</p>
+
+            <ol>
+                <li>
+                    <strong>Xem Lịch lãnh đạo:</strong> Tại trang chủ của Phần mềm họp thông minh hiển thị mặc định là Lịch lãnh đạo. Nếu công chức là thư ký/giúp việc của lãnh đạo thì phải theo dõi lịch này và nhấn nút tuần sau để xem lịch lãnh đạo vì mặc định phần mềm đang chỉ hiển thị tuần này. Trường hợp công chức không phải là thư ký/giúp việc lãnh đạo thì không cần phải quan tâm tới lịch này.
+                    <div class="image-container">
+                        <img src="anh1.png" alt="Lịch lãnh đạo">
+                    </div>
+                </li>
+                <li>
+                    <strong>Nhấn vào tab Lịch đơn vị:</strong> Để xem các cuộc họp của đơn vị. Hiện tại Phần mềm họp thông minh hiển thị mặc định lịch theo tuần hiện tại. Do đó phải nhấn vào nút 'Tuần' để xem lịch của tuần kế tiếp.
+                    <div class="image-container">
+                        <img src="anh2.png" alt="Lịch đơn vị">
+                    </div>
+                </li>
+                <li>
+                    <strong>Nhấn vào tab Lịch cá nhân:</strong> Để xem lịch của cá nhân. Phần mềm họp thông minh hiển thị mặc định lịch theo tuần hiện tại. Do đó phải nhấn vào nút 'Tuần' để xem lịch của tuần kế tiếp thì mới có thể xác định được thứ 3 tuần tới cán bộ, công chức đó có lịch họp cụ thể hay không.
+                    <div class="image-container">
+                        <img src="anh3.png" alt="Lịch cá nhân">
+                    </div>
+                </li>
+            </ol>
+
+            <div class="note">
+                <strong>⚠️ Nhận xét:</strong> Để xem xét trong tương lai gần có lịch họp hay không, cán bộ công chức phải thực hiện một số thao tác nhất định. Tuy không nhiều, nhưng cũng không phải là ít và cũng phải được tập huấn sử dụng phần mềm mới có thể sử dụng được. Nếu không tập huấn thì có thể sẽ bị mờ thông tin chỗ lịch của đơn vị - liệu mình có phải tham gia hay không? Phải được tập huấn hoặc đọc tài liệu để hiểu được phần mềm đang xử lý như thế nào?
+            </div>
+        </div>
+
+        <!-- Section II -->
+        <div class="section">
+            <h2>II. SAU KHI TRIỂN KHAI AI-FIRST</h2>
+            
+            <p>Sau khi triển khai các chức năng AI-First thì chỉ cần tại 1 màn hình duy nhất và không phải thao tác gì, cũng không cần phải được tập huấn và phải nhớ phần mềm được lập trình hoạt động phần lịch này như thế nào. Cán bộ công chức chỉ cần hỏi AI tại một màn hình duy nhất là có ngay kết quả:</p>
+
+            <!-- AI Demo Interface -->
+            <div class="ai-demo">
+                <h3>🤖 Demo: Hỏi AI về Lịch Họp</h3>
+                <div class="chat-box">
+                    <div class="chat-message user-msg">
+                        <strong>Cán bộ/Công chức:</strong> Thứ 3 tuần tới tôi có lịch họp không bạn?
+                    </div>
+                    
+                    <div class="chat-message ai-msg">
+                        <strong>AI Assistant:</strong>
+                        <div class="ai-thinking">💭 Thinking: Hôm nay là thứ 5, ngày 24/9/2026. Thứ 3 tuần tới sẽ là ngày 29/9/2026</div>
+                        <div class="ai-thinking">💭 Thinking: Tài khoản đang đăng nhập là tuantc (Trần Công Tuấn), công chức Phòng Tài vụ quản trị</div>
+                        <div class="ai-thinking">💭 Thinking: Thực thi AI Agent lấy thông tin lịch theo tài khoản và thời gian</div>
+                        <div class="ai-thinking">💭 Thinking: Tổng hợp kết quả</div>
+                        <div class="ai-answer">
+                            ✅ Thứ 3 tuần tới, ngày 29/9/2026 bạn có lịch họp như sau:
+                            <div class="meeting-detail">
+                                <strong>📋 Nội dung cuộc họp:</strong> Họp rà soát hồ sơ chuẩn bị kế hoạch dự toán năm 2027
+                                <strong>🕐 Thời gian:</strong> 14h đến 17h ngày 29/9/2026
+                                <strong>👔 Chủ trì:</strong> Đ/c Nguyễn Văn A, Trưởng phòng
+                                <strong>📍 Địa điểm:</strong> Phòng họp 201, Tòa T3
+                                <strong>👥 Thành phần:</strong> Toàn thể cán bộ công chức tổ xây dựng dự toán
+                            </div>
+                            <div class="ai-suggestions">
+                                <strong>💡 Bạn có thể:</strong>
+                                <ul>
+                                    <li><button class="suggestion-btn" onclick="fillChatInput('Xác nhận tham gia cuộc họp')">✅ Xác nhận tham gia cuộc họp</button></li>
+                                    <li><button class="suggestion-btn" onclick="fillChatInput('Đăng ký vắng mặt')">❌ Đăng ký vắng mặt</button></li>
+                                    <li><button class="suggestion-btn" onclick="fillChatInput('Uỷ quyền tham gia họp')">👥 Uỷ quyền tham gia họp</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <input 
+                            type="text" 
+                            id="chatInput" 
+                            placeholder="Nhập lệnh hoặc câu hỏi..." 
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button class="send-btn" onclick="sendMessage()">📤 Gửi</button>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px;"><strong>Lợi ích chính:</strong></p>
+            <ul>
+                <li>✨ Chỉ 1 câu hỏi thay vì 3 bước phức tạp</li>
+                <li>✨ Không cần tập huấn hoặc đọc tài liệu</li>
+                <li>✨ Kết quả tức thời và chi tiết</li>
+                <li>✨ Giao diện thân thiện, dễ sử dụng</li>
+                <li>✨ Tự động xử lý lịch cá nhân, đơn vị và lãnh đạo</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function fillChatInput(text) {
+            const chatInput = document.getElementById('chatInput');
+            chatInput.value = text;
+            chatInput.focus();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            
+            if (!message) return;
+            
+            // Tạo thông báo gửi
+            const chatBox = document.querySelector('.chat-box');
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'chat-message user-msg';
+            userMsgDiv.innerHTML = `<strong>Cán bộ/Công chức:</strong> ${escapeHtml(message)}`;
+            chatBox.appendChild(userMsgDiv);
+            
+            // Xóa input
+            chatInput.value = '';
+            
+            // Cuộn xuống cuối
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            // Mô phỏng AI response (tùy chọn)
+            setTimeout(() => {
+                const aiMsgDiv = document.createElement('div');
+                aiMsgDiv.className = 'chat-message ai-msg';
+                aiMsgDiv.innerHTML = `<strong>AI Assistant:</strong> Đã ghi nhận yêu cầu của bạn: "${escapeHtml(message)}". Đang xử lý...`;
+                chatBox.appendChild(aiMsgDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 500);
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>

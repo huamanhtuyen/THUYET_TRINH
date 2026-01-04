@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triển khai Documentation với Gitea</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+
+        .nav-bar {
+            background: #fff;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-bar ul {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-bar a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-bar a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-bar a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .content {
+            padding: 1.5rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        h3 {
+            color: #555;
+            font-size: 1.15rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background: #fff8e1;
+            border-left: 4px solid #ffa726;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #66bb6a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .flow-diagram {
+            background: #f8f9ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            line-height: 2;
+        }
+
+        .arrow {
+            color: #667eea;
+            font-size: 1.2rem;
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .benefit-list li:before {
+            content: "✅ ";
+            margin-right: 0.5rem;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 1.8rem;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin: 0.25rem;
+        }
+
+        .process-steps {
+            counter-reset: step;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .process-steps li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .process-steps li:before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 2rem;
+            font-weight: bold;
+        }
+
+        .architecture-diagram {
+            background: #f8f9ff;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .architecture-diagram h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .component-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .component-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .component-card h5 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .component-card p {
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .comment-section {
+            background: #fff3e0;
+            border: 1px solid #ffcc80;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .comment-section h4 {
+            color: #e65100;
+            margin-bottom: 1rem;
+        }
+
+        .comment-example {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-left: 3px solid #667eea;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 0.85rem;
+        }
+
+        .comment-date {
+            color: #999;
+            font-size: 0.75rem;
+        }
+
+        .history-item {
+            background: #f8f9ff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-left: 3px solid #667eea;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .history-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .commit-hash {
+            font-family: monospace;
+            background: #e0e0e0;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f0ff;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            h3 {
+                font-size: 1.05rem;
+            }
+
+            .nav-bar ul {
+                gap: 0.5rem;
+            }
+
+            .nav-bar a {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🚀 Triển khai Documentation với Gitea</h1>
+        <p>Xây dựng hệ thống quản lý tài liệu chuyên nghiệp</p>
+    </div>
+
+    <nav class="nav-bar">
+        <ul>
+            <li><a href="index.html" class="btn btn-secondary">📚 Trang 1: Tổng quan</a></li>
+            <li><a href="#" class="active">🚀 Trang 2: Triển khai với Gitea</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="content">
+            <a href="index.html" class="back-link">← Quay lại trang chủ</a>
+
+            <div class="section">
+                <h2>🏗️ Kiến trúc hệ thống</h2>
+                <p>Hệ thống documentation hoàn chỉnh bao gồm các thành phần sau:</p>
+
+                <div class="architecture-diagram">
+                    <h4>📐 Sơ đồ kiến trúc tổng thể</h4>
+                    <div class="component-grid">
+                        <div class="component-card">
+                            <div class="icon">📝</div>
+                            <h5>Markdown Files</h5>
+                            <p>Source documentation được viết bằng Markdown</p>
+                        </div>
+                        <div class="component-card">
+                            <div class="icon">🔷</div>
+                            <h5>Gitea Server</h5>
+                            <p>Git server nội bộ, quản lý repository và version control</p>
+                        </div>
+                        <div class="component-card">
+                            <div class="icon">⚙️</div>
+                            <h5>Build Tool</h5>
+                            <p>MkDocs/Docusaurus để generate static website</p>
+                        </div>
+                        <div class="component-card">
+                            <div class="icon">🌐</div>
+                            <h5>Web Server</h5>
+                            <p>Host documentation website, có thể dùng Nginx/Apache</p>
+                        </div>
+                        <div class="component-card">
+                            <div class="icon">💬</div>
+                            <h5>Comment System</h5>
+                            <p>Hệ thống comment và feedback cho khách hàng</p>
+                        </div>
+                        <div class="component-card">
+                            <div class="icon">📜</div>
+                            <h5>Git History</h5>
+                            <p>Hiển thị lịch sử thay đổi từ Gitea server</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-diagram">
+                    <div><strong>Viết Markdown</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>Push lên Gitea</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>CI/CD Build</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>Deploy Website</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>Khách hàng xem & Comment</strong></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔧 Triển khai với Gitea và Build Tool</h2>
+
+                <h3>1. Cài đặt và cấu hình Gitea Server</h3>
+                <div class="highlight-box">
+                    <h4>🛠️ Các bước cài đặt Gitea:</h4>
+                    <ol>
+                        <li>Cài đặt Docker và Docker Compose</li>
+                        <li>Tạo file <code>docker-compose.yml</code> cho Gitea</li>
+                        <li>Configure volumes và ports</li>
+                        <li>Khởi chạy Gitea service</li>
+                    </ol>
+                </div>
+
+                <div class="code-block"># docker-compose.yml cho Gitea
+version: '3'
+
+services:
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=db:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=gitea
+    ports:
+      - "3000:3000"
+      - "22:22"
+    volumes:
+      - gitea-data:/data
+      - gitea-git:/git
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=gitea
+      - POSTGRES_DB=gitea
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  gitea-data:
+  gitea-git:
+  postgres-data:</div>
+
+                <h3>2. Cấu hình MkDocs với CI/CD</h3>
+                <div class="success-box">
+                    <h4>✨ Tích hợp CI/CD tự động:</h4>
+                    <p>Khi có commit mới lên Gitea, hệ thống sẽ tự động:</p>
+                    <ul class="benefit-list">
+                        <li>Pull code mới từ repository</li>
+                        <li>Build documentation website</li>
+                        <li>Deploy lên web server</li>
+                    </ul>
+                </div>
+
+                <div class="code-block"># .gitea/workflows/docs.yml
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install mkdocs mkdocs-material
+      
+      - name: Build documentation
+        run: mkdocs build --site-dir public
+      
+      - name: Deploy to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          source: public/
+          target: /var/www/docs.example.com</div>
+
+                <h3>3. Cấu hình MkDocs</h3>
+                <div class="code-block"># mkdocs.yml
+site_name: Documentation Portal
+site_description: Hệ thống tài liệu dự án
+site_author: Team Dev
+
+theme:
+  name: material
+  palette: 
+    primary: indigo
+    accent: purple
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search:
+      prebuild_index: true
+  - tags:
+      enabled: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-org
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Overview: getting-started/overview.md
+      - Installation: getting-started/installation.md
+  - API Reference: api/</div>
+            </div>
+
+            <div class="section">
+                <h2>💬 Hệ thống Comment và Feedback</h2>
+
+                <p>Khách hàng có thể comment và phản hồi trực tiếp trên documentation website để đề xuất thay đổi hoặc báo lỗi.</p>
+
+                <div class="comment-section">
+                    <h4>💡 Ví dụ Comment từ khách hàng:</h4>
+
+                    <div class="comment-example">
+                        <div class="comment-header">
+                            <span class="comment-author">👤 Nguyễn Văn Khách</span>
+                            <span class="comment-date">2024-01-15 10:30</span>
+                        </div>
+                        <p>Phần hướng dẫn cài đặt chưa đầy đủ, cần thêm hướng dẫn cho Ubuntu 22.04. Có thể bổ sung Dockerfile example không?</p>
+                    </div>
+
+                    <div class="comment-example">
+                        <div class="comment-header">
+                            <span class="comment-author">👤 Trần Thị Mỹ</span>
+                            <span class="comment-date">2024-01-16 14:20</span>
+                        </div>
+                        <p>Cảm ơn team! Phần API reference rất hữu ích. Mong muốn có thêm ví dụ về authentication.</p>
+                    </div>
+                </div>
+
+                <h3>1. Tích hợp Giscus (GitHub Discussions)</h3>
+                <div class="highlight-box">
+                    <p><strong>Giscus</strong> là hệ thống comment sử dụng GitHub Discussions, cho phép:</p>
+                    <ul>
+                        <li>Comment được lưu trữ trên GitHub</li>
+                        <li>Tự động tạo issue khi có comment mới</li>
+                        <li>Theo dõi và phản hồi từ repository</li>
+                    </ul>
+                </div>
+
+                <div class="code-block"><!-- Thêm vào mkdocs.yml -->
+extra:
+  comments:
+    giscus:
+      repo: your-org/docs
+      repo-id: R_kgDOGxxxx
+      category: Announcements
+      category-id: DIC_kwDOGxxxx
+      mapping: pathname
+      strict: true
+      reactions-enabled: true
+      emit-metadata: false</div>
+
+                <h3>2. Tích hợp Comment tùy chỉnh với Gitea</h3>
+                <div class="code-block"><!-- Thêm vào base.html của theme -->
+<script>
+async function submitComment(pagePath, content) {
+  const response = await fetch('/api/comments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      page: pagePath,
+      content: content,
+      author: 'Khách hàng'
+    })
+  });
+  return response.json();
+}
+</script></div>
+
+                <h3>3. Quy trình xử lý Comment</h3>
+                <ol class="process-steps">
+                    <li><strong>Khách hàng đăng comment</strong> trên documentation website</li>
+                    <li><strong>Hệ thống gửi notification</strong> qua email đến team phụ trách</li>
+                    <li><strong>Team review và phản hồi</strong> trực tiếp hoặc tạo task</li>
+                    <li><strong>Thực hiện thay đổi</strong> trong repository</li>
+                    <li><strong>CI/CD tự động deploy</strong> version mới với comment đã được xử lý</li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2>📜 Hiển thị Git History từ Gitea</h2>
+
+                <p>Trang documentation có thể hiển thị lịch sử thay đổi trực tiếp từ Gitea server, giúp khách hàng theo dõi tiến độ cập nhật.</p>
+
+                <h3>1. Hiển thị Commit History cho mỗi trang</h3>
+                <div class="history-item">
+                    <div class="history-header">
+                        <span class="history-title">Update installation guide for Ubuntu 22.04</span>
+                        <span class="history-meta">
+                            <span class="commit-hash">a1b2c3d</span>
+                            by nguyen.van
+                        </span>
+                    </div>
+                    <p style="margin: 0; font-size: 0.85rem; color: #666;">2024-01-15 10:30:05</p>
+                </div>
+
+                <div class="history-item">
+                    <div class="history-header">
+                        <span class="history-title">Add Docker Compose example</span>
+                        <span class="history-meta">
+                            <span class="commit-hash">e5f6g7h</span>
+                            by tran.thi
+                        </span>
+                    </div>
+                    <p style="margin: 0; font-size: 0.85rem; color: #666;">2024-01-14 16:45:22</p>
+                </div>
+
+                <div class="history-item">
+                    <div class="history-header">
+                        <span class="history-title">Fix typos in API reference</span>
+                        <span class="history-meta">
+                            <span class="commit-hash">i9j0k1l</span>
+                            by le.van
+                        </span>
+                    </div>
+                    <p style="margin: 0; font-size: 0.85rem; color: #666;">2024-01-13 09:15:33</p>
+                </div>
+
+                <h3>2. Tích hợp Gitea API để lấy History</h3>
+                <div class="code-block">// Lấy commit history từ Gitea API
+async function getPageHistory(filePath, repoOwner, repoName) {
+  const response = await fetch(
+    `/api/v1/repos/${repoOwner}/${repoName}/commits?path=${filePath}`
+  );
+  const commits = await response.json();
+  
+  return commits.map(commit => ({
+    sha: commit.sha.substring(0, 7),
+    message: commit.commit.message,
+    author: commit.commit.author.name,
+    date: commit.commit.author.date,
+    url: commit.html_url
+  }));
+}
+
+// Hiển thị lịch sử trên trang documentation
+async function renderHistory(filePath) {
+  const history = await getPageHistory(
+    filePath, 
+    'your-org', 
+    'documentation'
+  );
+  
+  const historyContainer = document.getElementById('history-list');
+  historyContainer.innerHTML = history.map(commit => `
+    <div class="history-item">
+      <div class="history-header">
+        <span class="history-title">${commit.message}</span>
+        <span class="history-meta">
+          <span class="commit-hash">${commit.sha}</span>
+          by ${commit.author}
+        </span>
+      </div>
+      <p style="margin: 0; font-size: 0.85rem; color: #666;">
+        ${new Date(commit.date).toLocaleString('vi')}
+      </p>
+    </div>
+  `).join('');
+}</div>
+
+                <h3>3. Hiển thị "Last Updated" và Version</h3>
+                <div class="success-box">
+                    <p><strong>Thông tin phiên bản được hiển thị tự động:</strong></p>
+                    <ul class="benefit-list">
+                        <li><strong>Last Updated:</strong> Ngày cập nhật cuối cùng từ commit history</li>
+                        <li><strong>Version:</strong> Phiên bản documentation hiện tại</li>
+                        <li><strong>Commit Hash:</strong> Mã commit đang được hiển thị</li>
+                        <li><strong>Link to Git:</strong> Liên kết trực tiếp đến commit trên Gitea</li>
+                    </ul>
+                </div>
+
+                <div class="code-block"><!-- Thêm vào footer của mỗi trang -->
+<div class="page-meta" style="
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  font-size: 0.85rem;
+  color: #666;
+">
+  <p>
+    <strong>Cập nhật lần cuối:</strong> 
+    <span id="last-updated">--</span>
+  </p>
+  <p>
+    <strong>Phiên bản:</strong> v1.0.0
+    <strong> | Commit:</strong> 
+    <a id="commit-link" href="#">--</a>
+  </p>
+</div></div>
+            </div>
+
+            <div class="section">
+                <h2>🔄 Quy trình làm việc hoàn chỉnh</h2>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-title">📝 Viết tài liệu</div>
+                        <p>Team viết content bằng Markdown, lưu vào repository trên Gitea</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-title">🔀 Tạo Pull Request</div>
+                        <p>Submit thay đổi qua Pull Request, team review và approve</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-title">🚀 CI/CD Deploy</div>
+                        <p>Sau khi merge, CI/CD tự động build và deploy website mới</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-title">💬 Khách hàng Comment</div>
+                        <p>Khách hàng xem documentation và gửi feedback trực tiếp trên website</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-title">🔧 Team xử lý</div>
+                        <p>Team nhận comment, tạo task và cập nhật tài liệu</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-title">✅ Cập nhật hoàn tất</div>
+                        <p>Website được cập nhật với thay đổi mới, history được ghi nhận</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>✨ Lợi ích của hệ thống</h2>
+                <div class="success-box">
+                    <ul class="benefit-list">
+                        <li><strong>Tự động hóa hoàn toàn:</strong> Từ viết tài liệu đến deploy chỉ cần commit code</li>
+                        <li><strong>Phản hồi nhanh chóng:</strong> Khách hàng comment trực tiếp, không cần email</li>
+                        <li><strong>Minh bạch:</strong> Mọi thay đổi được ghi nhận trong git history</li>
+                        <li><strong>Version control:</strong> Có thể xem lại bất kỳ phiên bản tài liệu nào</li>
+                        <li><strong>Tích hợp với công cụ quen thuộc:</strong> Gitea, Git quen thuộc với developer</li>
+                        <li><strong>Chi phí thấp:</strong> Sử dụng Gitea và CI/CD miễn phí</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📄 Export Documentation ra DOCX (Ghép nhiều file .md)</h2>
+                <p>Bên cạnh website documentation, hệ thống còn hỗ trợ xuất tài liệu ra định dạng Word (.docx) bằng cách <strong>ghép nhiều file .md</strong> thành một file DOCX hoàn chỉnh khi cần in ấn hoặc nộp hồ sơ chính thức.</p>
+
+                <h3>1. Cấu trúc file Markdown cần ghép</h3>
+                <div class="code-block">📂 docs/
+├── 📄 00-gioi-thieu.md
+├── 📄 01-phan-tich-yeu-cau.md
+├── 📄 02-thiet-ke-he-thong.md
+├── 📄 03-huong-dan-su-dung.md
+├── 📄 04-phan-mem.md
+└── 📄 _toc.txt ← File cấu hình thứ tự ghép
+
+# Nội dung _toc.txt (thứ tự các file cần ghép):
+00-gioi-thieu.md
+01-phan-tich-yeu-cau.md
+02-thiet-ke-he-thong.md
+03-huong-dan-su-dung.md
+04-phan-mem.md</div>
+
+                <h3>2. Script ghép file Markdown (Bash)</h3>
+                <div class="code-block">#!/bin/bash
+# merge_md_to_docx.sh
+
+set -e
+
+# Cấu hình
+DOCS_DIR="docs"
+OUTPUT_FILE="Tai-Lieu-Du-An.docx"
+TEMPLATE_FILE="template.docx"
+
+echo "Đang ghép các file Markdown..."
+
+echo "# Tài liệu Dự án\n\n## Phiên bản: $(git log -1 --format='%h' 2>/dev/null || echo 'local')\n\n---" > combined.md
+
+# Đọc _toc.txt và ghép từng file
+while IFS= read -r md_file; do
+    if [ -f "$DOCS_DIR/$md_file" ]; then
+        echo "  + Thêm: $md_file"
+        echo -e "\n\n---\n\n## $(basename "$md_file" .md)\n" >> combined.md
+        cat "$DOCS_DIR/$md_file" >> combined.md
+    else
+        echo "  ! File không tồn tại: $md_file"
+    fi
+done < "$DOCS_DIR/_toc.txt"
+
+echo "✓ Đã ghép xong file Markdown"
+
+# Chuyển đổi sang DOCX bằng Pandoc
+echo "Đang chuyển đổi sang DOCX..."
+pandoc combined.md \
+    -o "$OUTPUT_FILE" \
+    --reference-doc "$TEMPLATE_FILE" \
+    --number-sections \
+    --toc \
+    --metadata title="Tài liệu Dự án"
+
+echo "✓ Đã tạo file: $OUTPUT_FILE"
+
+# Dọn dẹp
+rm -f combined.md</div>
+
+                <h3>3. Python Script (Alternative)</h3>
+                <div class="code-block">#!/usr/bin/env python3
+"""
+Script ghép nhiều file Markdown thành một file DOCX
+"""
+
+import os
+import subprocess
+from pathlib import Path
+
+def merge_markdown_files(docs_dir: str, output_file: str, template_file: str):
+    """Ghép các file Markdown theo thứ tự trong _toc.txt"""
+    
+    docs_path = Path(docs_dir)
+    toc_file = docs_path / "_toc.txt"
+    
+    if not toc_file.exists():
+        raise FileNotFoundError(f"Không tìm thấy file _toc.txt trong {docs_dir}")
+    
+    # Đọc danh sách file từ _toc.txt
+    with open(toc_file, 'r', encoding='utf-8') as f:
+        md_files = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+    
+    # Ghép nội dung
+    combined_content = ["# Tài liệu Dự án\n"]
+    
+    for md_file in md_files:
+        md_path = docs_path / md_file
+        if md_path.exists():
+            print(f"  + Thêm: {md_file}")
+            with open(md_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            combined_content.append(f"\n\n---\n\n## {md_file}\n")
+            combined_content.append(content)
+        else:
+            print(f"  ! File không tồn tại: {md_file}")
+    
+    # Lưu file tạm
+    combined_file = "combined_temp.md"
+    with open(combined_file, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(combined_content))
+    
+    # Chuyển đổi sang DOCX
+    cmd = [
+        'pandoc', combined_file,
+        '-o', output_file,
+        '--reference-doc', template_file,
+        '--number-sections',
+        '--toc',
+        '--metadata', 'title=Tài liệu Dự án'
+    ]
+    
+    subprocess.run(cmd, check=True)
+    
+    # Dọn dẹp
+    os.remove(combined_file)
+    
+    print(f"✓ Đã tạo file: {output_file}")
+
+if __name__ == "__main__":
+    merge_markdown_files(
+        docs_dir="docs",
+        output_file="Tai-Lieu-Du-An.docx",
+        template_file="template.docx"
+    )</div>
+
+                <h3>4. Tích hợp vào CI/CD</h3>
+                <div class="success-box">
+                    <p><strong>Tự động ghép và xuất DOCX khi có thay đổi:</strong></p>
+                    <ul class="benefit-list">
+                        <li>CI/CD tự động chạy script merge</li>
+                        <li>Ghép tất cả file .md theo thứ tự _toc.txt</li>
+                        <li>Tạo file .docx hoàn chỉnh sau mỗi commit</li>
+                        <li>Lưu vào Gitea releases hoặc artifacts</li>
+                    </ul>
+                </div>
+
+                <div class="code-block"># .gitea/workflows/export-docx.yml
+name: Export DOCX
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install pandoc
+        run: sudo apt-get install -y pandoc
+      
+      - name: Install dependencies
+        run: pip install pypandoc
+      
+      - name: Merge Markdown files
+        run: |
+        # Chạy script merge
+        python3 scripts/merge_md_to_docx.py
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Tai-Lieu-Du-An
+          path: Tai-Lieu-Du-An.docx
+      
+      - name: Commit DOCX back to repo
+        run: |
+          git config user.name "CI Bot"
+          git config user.email "ci@example.com"
+          git add docs/Tai-Lieu-Du-An.docx
+          git commit -m "Update DOCX: $(git log -1 --format='%s')" || echo "No changes"
+          git push</div>
+
+                <h3>5. Cấu hình Template DOCX</h3>
+                <div class="code-block"># Tạo template reference cho Pandoc
+pandoc -o template.docx --print-default-template=docx
+
+# Chỉnh sửa template.docx theo yêu cầu format văn bản:
+# - Font chữ: Times New Roman, cỡ 12
+# - Heading 1: Cỡ 16, in đậm, canh giữa
+# - Heading 2: Cỡ 14, in đậm
+# - Canh lề: Trái 2.5cm, Phải 2cm, Trên 2cm, Dưới 2cm
+# - Khoảng cách dòng: 1.5</div>
+
+                <h3>6. Quy trình xuất DOCX hoàn chỉnh</h3>
+                <div class="flow-diagram">
+                    <div><strong>1. Viết tài liệu trên nhiều file .md</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>2. Cập nhật _toc.txt nếu cần</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>3. Commit & Push lên Gitea</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>4. CI/CD chạy script merge</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>5. Ghép tất cả file .md thành 1 file</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>6. Export sang DOCX</strong></div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>7. Lưu vào Release / Khách hàng tải</strong></div>
+                </div>
+
+                <h3>7. Tích hợp nút Download DOCX trên Website</h3>
+                <div class="code-block">&lt;!-- Thêm nút Download vào header/footer của website --&gt;
+&lt;div class="download-section" style="margin: 1rem 0; text-align: center;"&gt;
+  &lt;a href="/downloads/Tai-Lieu-Du-An.docx" class="btn" style="
+    display: inline-block;
+    background: #28a745;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+  "&gt;
+    📥 Tải xuống DOCX (Full)
+  &lt;/a&gt;
+  &lt;span style="margin-left: 1rem; font-size: 0.85rem; color: #666;"&gt;
+    Cập nhật: $LAST_COMMIT_DATE$
+  &lt;/span&gt;
+&lt;/div&gt;</div>
+
+                <h3>8. Ví dụ ghép file hoàn chỉnh</h3>
+                <div class="code-block"># Ví dụ: Tài liệu dự án được ghép từ:
+# docs/00-gioi-thieu.md
+# docs/01-phan-tich-yeu-cau.md
+# docs/02-thiet-ke-he-thong.md
+# docs/03-huong-dan-su-dung.md
+# docs/04-phan-mem.md
+
+# Kết quả:
+# Tài liệu Dự án.docx (50 trang)
+# ├── Phần 1: Giới thiệu
+# ├── Phần 2: Phân tích yêu cầu
+# ├── Phần 3: Thiết kế hệ thống
+# ├── Phần 4: Hướng dẫn sử dụng
+# └── Phần 5: Phần mềm</div>
+
+                <div class="warning-box">
+                    <strong>💡 Lưu ý quan trọng:</strong> Khi ghép nhiều file .md:
+                    <ul>
+                        <li>Đảm bảo heading (H1, H2, H3...) bắt đầu lại từ đầu mỗi file hoặc đánh số liên tục</li>
+                        <li>Mermaid diagrams sẽ được render thành hình ảnh (cần cấu hình thêm)</li>
+                        <li>File _toc.txt quyết định thứ tự ghép - hãy đặt số thứ tự ở đầu tên file</li>
+                    </ul>
+                &lt;/div&gt;
+
+                <div class="success-box">
+                    <h4>✨ Lợi ích của hệ thống ghép file Markdown:</h4>
+                    <ul class="benefit-list">
+                        <li><strong>Làm việc nhóm:</strong> Mỗi người viết 1 file riêng, không xung đột</li>
+                        <li><strong>Tự động hoàn toàn:</strong> Không cần copy-paste thủ công</li>
+                        <li><strong>Nhất quán:</strong> Template chuẩn, format đồng nhất</li>
+                        <li><strong>Theo phiên bản:</strong> Mỗi commit tạo 1 phiên bản DOCX riêng</li>
+                        <li><strong>Dễ dàng:</strong> Khách hàng chỉ cần click để tải file hoàn chỉnh</li>
+                    &lt;/ul>
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            <div class="section">
+                <h2>⚡ Bắt đầu triển khai</h2>
+                <div class="highlight-box">
+                    <h4>🚀 Các bước triển khai:</h4>
+                    <ol>
+                        <li><strong>Chuẩn bị:</strong> Cài đặt Gitea server và cấu hình ban đầu</li>
+                        <li><strong>Tạo repository:</strong> Tạo repo documentation trên Gitea</li>
+                        <li><strong>Cấu hình Build Tool:</strong> Cài đặt MkDocs và cấu hình CI/CD</li>
+                        <li><strong>Tích hợp Comment:</strong> Thêm hệ thống comment (Giscus hoặc tự xây dựng)</li>
+                        <li><strong>Hiển thị History:</strong> Kết nối Gitea API để show commit history</li>
+                        <li><strong>Deploy:</strong> Cấu hình web server và bắt đầu sử dụng</li>
+                    </ol>
+                </div>
+
+                <div class="warning-box">
+                    <strong>💡 Khuyến nghị:</strong> Bắt đầu với MkDocs Material theme vì dễ cấu hình, đẹp sẵn, và có hỗ trợ tìm kiếm tốt. Kết hợp với Gitea Actions cho CI/CD để có workflow hoàn chỉnh.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

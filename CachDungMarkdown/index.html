@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng dẫn Quản lý Tài liệu Dự án Hiện đại</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .content {
+            padding: 1.5rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        h3 {
+            color: #555;
+            font-size: 1.15rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background: #fff8e1;
+            border-left: 4px solid #ffa726;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #66bb6a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            min-width: 300px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .flow-diagram {
+            background: #f8f9ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            line-height: 2;
+        }
+
+        .arrow {
+            color: #667eea;
+            font-size: 1.2rem;
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        ul,
+        ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .benefit-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .benefit-list li:before {
+            content: "✅ ";
+            margin-right: 0.5rem;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 1.8rem;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            background: #f8f9ff;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-answer {
+            color: #555;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .cta-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item:before {
+            content: "";
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            background: #667eea;
+        }
+
+        .timeline-item:after {
+            content: "";
+            position: absolute;
+            left: -1.65rem;
+            top: 1.25rem;
+            width: 2px;
+            height: calc(100% - 0.5rem);
+            background: #ddd;
+        }
+
+        .timeline-item:last-child:after {
+            display: none;
+        }
+
+        .timeline-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            h3 {
+                font-size: 1.05rem;
+            }
+
+            .comparison-table {
+                font-size: 0.8rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.5rem;
+            }
+
+            .code-block {
+                font-size: 0.75rem;
+                padding: 0.75rem;
+            }
+        }
+
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin: 0.25rem;
+        }
+
+        /* Code and Result Layout */
+        .code-result-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .code-result-container .code-side,
+        .code-result-container .result-side {
+            background: #f8f9ff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .code-result-container .code-side {
+            background: #2d2d2d;
+        }
+
+        .code-result-container .side-header {
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-side .side-header {
+            background: #1a1a1a;
+            color: #f8f8f2;
+        }
+
+        .result-side .side-header {
+            background: #667eea;
+            color: white;
+        }
+
+        .code-result-container .side-content {
+            padding: 1rem;
+        }
+
+        .code-side .side-content {
+            color: #f8f8f2;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .result-side .side-content {
+            font-size: 0.9rem;
+        }
+
+        .result-side .side-content h1 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-side .side-content h2 {
+            font-size: 1.2rem;
+            border: none;
+            padding: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-side .side-content a {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        /* Mermaid Diagram Styles */
+        .diagram-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f9ff;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .diagram-section h4 {
+            color: #667eea;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .diagram-code {
+            background: #2d2d2d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .diagram-code .code-header {
+            background: #1a1a1a;
+            color: #888;
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .diagram-code pre {
+            color: #f8f8f2;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            padding: 1rem;
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        .diagram-render {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+            min-height: 200px;
+        }
+
+        .diagram-render .mermaid {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+
+            .code-result-container,
+            .diagram-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                flowchart: { useMaxWidth: true, htmlLabels: true },
+                sequence: { useMaxWidth: true },
+                gantt: { useMaxWidth: true },
+                pie: { useMaxWidth: true }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Hướng dẫn Quản lý Tài liệu Dự án Hiện đại</h1>
+            <h2>(Hứa Mạnh Tuyển)</h2>
+            <p>Từ lộn xộn đến chuyên nghiệp trong 2 ngày</p>
+        </div>
+
+        <nav class="nav-bar" style="background: #fff; padding: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center;">
+            <a href="index.html" class="btn active" style="display: inline-block; background: #667eea; color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin: 0 0.5rem;">📚 Trang 1: Tổng quan</a>
+            <a href="page2.html" class="btn" style="display: inline-block; background: #fff; color: #667eea; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin: 0 0.5rem; border: 1px solid #667eea;">🚀 Trang 2: Triển khai với Gitea</a>
+        </nav>
+
+        <div class="content">
+            <div class="section">
+                <h2>🚨 Vấn đề hiện tại</h2>
+                <p>Hiện nay cán bộ và đội dự án đang gặp khó khăn khi quản lý tài liệu:</p>
+                <ul>
+                    <li>Nhiều người cùng sửa 1 tệp Văn bản → hay bị xung đột, mất dữ liệu</li>
+                    <li>Không biết ai sửa gì, khi nào</li>
+                    <li>Khó quản lý phiên bản (v1, v2, v3...)</li>
+                    <li>Tìm kiếm thông tin mất thời gian</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>💡 Giải pháp mới: Tài liệu như Mã nguồn</h2>
+                <p>Chúng ta sẽ quản lý tài liệu giống như quản lý mã nguồn - nghe có vẻ kỹ thuật nhưng thực tế
+                    <strong>rất đơn giản</strong>!
+                </p>
+
+                <div class="flow-diagram">
+                    <div>Viết tài liệu bằng định dạng Markdown (file .md)</div>
+                    <div class="arrow">⬇️</div>
+                    <div>Lưu trên Trung tâm mã nguồn</div>
+                    <div class="arrow">⬇️</div>
+                    <div>Tự động tạo Trang web</div>
+                    <div class="arrow">⬇️</div>
+                    <div>(Nếu cần) Xuất tệp Văn bản .docx</div>
+                </div>
+
+                <h3>So sánh với cách cũ</h3>
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cách cũ (Văn bản .docx)</th>
+                                <th>Cách mới (Markdown + Phần mềm quản lý phiên bản tài liệu)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mở Văn bản, gõ nội dung</td>
+                                <td>Mở trình soạn thảo, gõ nội dung (giống Văn bản nhưng đơn giản hơn)</td>
+                            </tr>
+                            <tr>
+                                <td>Lưu tệp, gửi thư điện tử</td>
+                                <td>"Chốt" và "Đẩy lên" (như ấn nút Lưu và Đồng bộ trên phần mềm quản lý phiên bản)</td>
+                            </tr>
+                            <tr>
+                                <td>Không biết ai sửa gì</td>
+                                <td>Thấy rõ ai sửa, sửa gì, khi nào</td>
+                            </tr>
+                            <tr>
+                                <td>Đọc bằng Văn bản</td>
+                                <td>Đọc trên trang web đẹp, dễ tìm kiếm, có thể xuất ra .docx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>� Làm việc nhóm: Chia để trị</h2>
+                <p>Một trong những lợi thế lớn nhất của phương pháp này là khả năng <strong>phân chia công việc</strong>
+                    hiệu quả:</p>
+
+                <div class="highlight-box">
+                    <h3>📂 Quy trình làm việc nhóm:</h3>
+                    <div class="flow-diagram">
+                        <div><strong>Bước 1:</strong> Chia tài liệu thành nhiều tệp .md riêng biệt</div>
+                        <div class="arrow">⬇️</div>
+                        <div><strong>Bước 2:</strong> Mỗi người phụ trách viết một phần riêng</div>
+                        <div class="arrow">⬇️</div>
+                        <div><strong>Bước 3:</strong> Đẩy lên kho chung (Git) → Tự động hợp nhất</div>
+                        <div class="arrow">⬇️</div>
+                        <div><strong>Bước 4:</strong> Ghép các phần lại → Xuất thành .docx hoàn chỉnh</div>
+                    </div>
+                </div>
+
+                <h3>📁 Ví dụ cấu trúc tài liệu dự án:</h3>
+                <div class="code-block">📂 tai-lieu-du-an/
+                    ├── 📄 00-gioi-thieu.md ← Anh A viết
+                    ├── 📄 01-phan-tich-yeu-cau.md ← Chị B viết
+                    ├── 📄 02-thiet-ke-he-thong.md ← Anh C viết
+                    ├── 📄 03-huong-dan-su-dung.md ← Chị D viết
+                    ├── 📄 04-ket-luan.md ← Anh A viết
+                    └── 📄 _config.yml ← Cấu hình xuất file</div>
+
+                <div class="success-box">
+                    <h3>✨ Lợi ích của cách làm này:</h3>
+                    <ul class="benefit-list">
+                        <li><strong>Không chờ đợi:</strong> Mỗi người làm phần của mình độc lập, không cần chờ người
+                            khác hoàn thành</li>
+                        <li><strong>Không xung đột:</strong> Mỗi người sửa tệp riêng → không bao giờ đụng nhau</li>
+                        <li><strong>Dễ theo dõi:</strong> Biết rõ ai chịu trách nhiệm phần nào</li>
+                        <li><strong>Tự động ghép:</strong> Hệ thống tự động ghép các tệp theo thứ tự đánh số</li>
+                        <li><strong>Một nút xuất docx:</strong> Toàn bộ tài liệu được ghép và xuất thành file Word hoàn
+                            chỉnh</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>💡 Mẹo:</strong> Đặt tên tệp với số thứ tự ở đầu (00-, 01-, 02-...) để hệ thống tự động sắp
+                    xếp đúng thứ tự khi ghép tài liệu.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🌐 Tự động tạo Website Tài liệu</h2>
+                <p>Với các công cụ build documentation hiện đại, bạn có thể tự động tạo <strong>website tài liệu chuyên
+                        nghiệp</strong> từ các file Markdown:</p>
+
+                <div class="highlight-box">
+                    <h3>🛠️ Các công cụ phổ biến:</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;">
+                        <span class="tag">📘 MkDocs</span>
+                        <span class="tag">🦖 Docusaurus</span>
+                        <span class="tag">📖 GitBook</span>
+                        <span class="tag">📚 VitePress</span>
+                        <span class="tag">📃 Sphinx</span>
+                    </div>
+                </div>
+
+                <h3>⚡ Cách hoạt động:</h3>
+                <div class="flow-diagram">
+                    <div>Viết/cập nhật file Markdown (.md)</div>
+                    <div class="arrow">⬇️</div>
+                    <div>Commit và push lên Git</div>
+                    <div class="arrow">⬇️</div>
+                    <div>CI/CD tự động build website</div>
+                    <div class="arrow">⬇️</div>
+                    <div><strong>🎉 Website cập nhật ngay lập tức!</strong></div>
+                </div>
+
+                <h3>📸 Ví dụ giao diện Website Tài liệu:</h3>
+                <div
+                    style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin: 1rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <img src="documentation_website.png" alt="Ví dụ giao diện website tài liệu với MkDocs Material"
+                        style="width: 100%; display: block;">
+                </div>
+                <p style="text-align: center; font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                    <em>Giao diện website tài liệu chuyên nghiệp với MkDocs Material theme</em>
+                </p>
+
+                <div class="success-box">
+                    <h3>✨ Lợi ích của Website Tài liệu tự động:</h3>
+                    <ul class="benefit-list">
+                        <li><strong>Luôn cập nhật:</strong> Website tự động rebuild sau mỗi commit - không bao giờ lỗi
+                            thời</li>
+                        <li><strong>Tìm kiếm mạnh mẽ:</strong> Tìm kiếm toàn văn, không cần mở từng file</li>
+                        <li><strong>Giao diện đẹp:</strong> Responsive, dark mode, navigation menu chuyên nghiệp</li>
+                        <li><strong>Miễn phí:</strong> Deploy trên GitHub Pages, GitLab Pages, Netlify hoàn toàn miễn
+                            phí</li>
+                        <li><strong>Đa ngôn ngữ:</strong> Hỗ trợ nhiều ngôn ngữ, versioning, API docs</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Công cụ</th>
+                                <th>Ngôn ngữ</th>
+                                <th>Đặc điểm nổi bật</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>MkDocs</strong></td>
+                                <td>Python</td>
+                                <td>Đơn giản, Material theme rất đẹp, phổ biến nhất</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Docusaurus</strong></td>
+                                <td>React</td>
+                                <td>Mạnh mẽ, versioning, i18n, blog tích hợp</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VitePress</strong></td>
+                                <td>Vue</td>
+                                <td>Nhanh, nhẹ, Vue components trong Markdown</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GitBook</strong></td>
+                                <td>SaaS</td>
+                                <td>Dễ dùng nhất, không cần cài đặt, có phí</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="warning-box">
+                    <strong>💡 Khuyến nghị:</strong> Với dự án mới, hãy bắt đầu với <strong>MkDocs + Material
+                        theme</strong> vì dễ cài đặt, đẹp sẵn, và có cộng đồng lớn.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📝 Markdown là gì?</h2>
+                <p>Đánh dấu (Markdown) là cách viết văn bản <strong>cực kỳ đơn giản</strong>, không cần các công cụ phức
+                    tạp như .docx.</p>
+
+                <h3>Ví dụ cách viết cơ bản:</h3>
+                <div class="code-result-container">
+                    <div class="code-side">
+                        <div class="side-header">📝 Mã Markdown</div>
+                        <div class="side-content"># Tiêu đề lớn
+                            ## Tiêu đề nhỏ hơn
+
+                            Đây là đoạn văn bản bình thường.
+
+                            **In đậm** và *in nghiêng*
+
+                            - Gạch đầu dòng 1
+                            - Gạch đầu dòng 2
+                            - Gạch đầu dòng 3
+
+                            1. Số thứ tự 1
+                            2. Số thứ tự 2
+
+                            [Liên kết](https://example.com)</div>
+                    </div>
+                    <div class="result-side">
+                        <div class="side-header">✨ Kết quả hiển thị</div>
+                        <div class="side-content">
+                            <h1>Tiêu đề lớn</h1>
+                            <h2>Tiêu đề nhỏ hơn</h2>
+                            <p>Đây là đoạn văn bản bình thường.</p>
+                            <p><strong>In đậm</strong> và <em>in nghiêng</em></p>
+                            <ul>
+                                <li>Gạch đầu dòng 1</li>
+                                <li>Gạch đầu dòng 2</li>
+                                <li>Gạch đầu dòng 3</li>
+                            </ul>
+                            <ol>
+                                <li>Số thứ tự 1</li>
+                                <li>Số thứ tự 2</li>
+                            </ol>
+                            <p><a href="https://example.com">Liên kết</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <strong>➡️ Học Markdown chỉ mất 15 phút! Đơn giản hơn docx nhiều.</strong>
+                </div>
+
+                <h3>🎨 Nâng cao: Vẽ biểu đồ với Mermaid</h3>
+                <p>Markdown còn hỗ trợ vẽ biểu đồ trực tiếp bằng cú pháp <strong>Mermaid</strong> - một công cụ mạnh mẽ
+                    để tạo sơ đồ từ văn bản!</p>
+
+                <!-- 1. Flowchart -->
+                <div class="diagram-section">
+                    <h4>📊 1. Sơ đồ luồng (Flowchart)</h4>
+                    <p>Dùng để mô tả quy trình, luồng công việc hoặc logic xử lý.</p>
+                    <div class="diagram-grid">
+                        <div class="diagram-code">
+                            <div class="code-header">MÃ MERMAID</div>
+                            <pre>```mermaid
+flowchart TD
+    A[Bắt đầu] --> B{Kiểm tra điều kiện}
+    B -->|Có| C[Xử lý dữ liệu]
+    B -->|Không| D[Kết thúc]
+    C --> E[Lưu kết quả]
+    E --> D
+```</pre>
+                        </div>
+                        <div class="diagram-render">
+                            <div class="mermaid">
+                                flowchart TD
+                                A[Bắt đầu] --> B{Kiểm tra điều kiện}
+                                B -->|Có| C[Xử lý dữ liệu]
+                                B -->|Không| D[Kết thúc]
+                                C --> E[Lưu kết quả]
+                                E --> D
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Sequence Diagram -->
+                <div class="diagram-section">
+                    <h4>🔄 2. Biểu đồ trình tự (Sequence Diagram)</h4>
+                    <p>Dùng để mô tả tương tác giữa các đối tượng theo thời gian.</p>
+                    <div class="diagram-grid">
+                        <div class="diagram-code">
+                            <div class="code-header">MÃ MERMAID</div>
+                            <pre>```mermaid
+sequenceDiagram
+    participant U as Người dùng
+    participant S as Hệ thống
+    participant DB as Cơ sở dữ liệu
+    
+    U->>S: Gửi yêu cầu
+    S->>DB: Truy vấn dữ liệu
+    DB-->>S: Trả về kết quả
+    S-->>U: Hiển thị kết quả
+```</pre>
+                        </div>
+                        <div class="diagram-render">
+                            <div class="mermaid">
+                                sequenceDiagram
+                                participant U as Người dùng
+                                participant S as Hệ thống
+                                participant DB as Cơ sở dữ liệu
+
+                                U->>S: Gửi yêu cầu
+                                S->>DB: Truy vấn dữ liệu
+                                DB-->>S: Trả về kết quả
+                                S-->>U: Hiển thị kết quả
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Gantt Chart -->
+                <div class="diagram-section">
+                    <h4>📅 3. Biểu đồ Gantt (Lịch trình dự án)</h4>
+                    <p>Dùng để lập kế hoạch và theo dõi tiến độ dự án.</p>
+                    <div class="diagram-grid">
+                        <div class="diagram-code">
+                            <div class="code-header">MÃ MERMAID</div>
+                            <pre>```mermaid
+gantt
+    title Kế hoạch dự án
+    dateFormat YYYY-MM-DD
+    section Giai đoạn 1
+        Phân tích yêu cầu    :a1, 2024-01-01, 7d
+        Thiết kế hệ thống    :a2, after a1, 10d
+    section Giai đoạn 2
+        Phát triển           :b1, after a2, 20d
+        Kiểm thử             :b2, after b1, 10d
+    section Giai đoạn 3
+        Triển khai           :c1, after b2, 5d
+```</pre>
+                        </div>
+                        <div class="diagram-render">
+                            <div class="mermaid">
+                                gantt
+                                title Kế hoạch dự án
+                                dateFormat YYYY-MM-DD
+                                section Giai đoạn 1
+                                Phân tích yêu cầu :a1, 2024-01-01, 7d
+                                Thiết kế hệ thống :a2, after a1, 10d
+                                section Giai đoạn 2
+                                Phát triển :b1, after a2, 20d
+                                Kiểm thử :b2, after b1, 10d
+                                section Giai đoạn 3
+                                Triển khai :c1, after b2, 5d
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Class Diagram -->
+                <div class="diagram-section">
+                    <h4>🏗️ 4. Biểu đồ lớp (Class Diagram)</h4>
+                    <p>Dùng để mô tả cấu trúc classes trong lập trình hướng đối tượng.</p>
+                    <div class="diagram-grid">
+                        <div class="diagram-code">
+                            <div class="code-header">MÃ MERMAID</div>
+                            <pre>```mermaid
+classDiagram
+    class NhanVien {
+        +String hoTen
+        +String maNV
+        +lamViec()
+        +nghiPhep()
+    }
+    class QuanLy {
+        +String phongBan
+        +duyetDon()
+        +phanCongCV()
+    }
+    class NhanVienIT {
+        +String chuyenMon
+        +suaChua()
+    }
+    NhanVien --|> QuanLy
+    NhanVien --|> NhanVienIT
+```</pre>
+                        </div>
+                        <div class="diagram-render">
+                            <div class="mermaid">classDiagram
+                                class NhanVien {
+                                +String hoTen
+                                +String maNV
+                                +lamViec()
+                                +nghiPhep()
+                                }
+                                class QuanLy {
+                                +String phongBan
+                                +duyetDon()
+                                +phanCongCV()
+                                }
+                                class NhanVienIT {
+                                +String chuyenMon
+                                +suaChua()
+                                }
+                                NhanVien --|> QuanLy
+                                NhanVien --|> NhanVienIT</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. State Diagram -->
+                <div class="diagram-section">
+                    <h4>🔀 5. Biểu đồ trạng thái (State Diagram)</h4>
+                    <p>Dùng để mô tả các trạng thái và chuyển đổi của một đối tượng.</p>
+                    <div class="diagram-grid">
+                        <div class="diagram-code">
+                            <div class="code-header">MÃ MERMAID</div>
+                            <pre>```mermaid
+stateDiagram-v2
+    [*] --> Mới
+    Mới --> DangXuLy : Tiếp nhận
+    DangXuLy --> ChoDuyet : Hoàn thành
+    ChoDuyet --> DaDuyet : Phê duyệt
+    ChoDuyet --> DangXuLy : Từ chối
+    DaDuyet --> DaDong : Đóng hồ sơ
+    DaDong --> [*]
+```</pre>
+                        </div>
+                        <div class="diagram-render">
+                            <div class="mermaid">
+                                stateDiagram-v2
+                                [*] --> Mới
+                                Mới --> DangXuLy : Tiếp nhận
+                                DangXuLy --> ChoDuyet : Hoàn thành
+                                ChoDuyet --> DaDuyet : Phê duyệt
+                                ChoDuyet --> DangXuLy : Từ chối
+                                DaDuyet --> DaDong : Đóng hồ sơ
+                                DaDong --> [*]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Pie Chart -->
+                <div class="diagram-section">
+                    <h4>🥧 6. Biểu đồ tròn (Pie Chart)</h4>
+                    <p>Dùng để thể hiện tỷ lệ phần trăm các thành phần.</p>
+                    <div class="diagram-grid">
+                        <div class="diagram-code">
+                            <div class="code-header">MÃ MERMAID</div>
+                            <pre>```mermaid
+pie showData
+    title Phân bổ ngân sách dự án
+    "Nhân sự" : 45
+    "Phần cứng" : 25
+    "Phần mềm" : 15
+    "Đào tạo" : 10
+    "Dự phòng" : 5
+```</pre>
+                        </div>
+                        <div class="diagram-render">
+                            <div class="mermaid">
+                                pie showData
+                                title Phân bổ ngân sách dự án
+                                "Nhân sự" : 45
+                                "Phần cứng" : 25
+                                "Phần mềm" : 15
+                                "Đào tạo" : 10
+                                "Dự phòng" : 5
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. ER Diagram -->
+                <div class="diagram-section">
+                    <h4>🗄️ 7. Biểu đồ thực thể - quan hệ (ER Diagram)</h4>
+                    <p>Dùng để mô tả cấu trúc cơ sở dữ liệu và quan hệ giữa các bảng.</p>
+                    <div class="diagram-grid">
+                        <div class="diagram-code">
+                            <div class="code-header">MÃ MERMAID</div>
+                            <pre>```mermaid
+erDiagram
+    KHACH_HANG ||--o{ DON_HANG : dat
+    DON_HANG ||--|{ CHI_TIET_DH : chua
+    SAN_PHAM ||--o{ CHI_TIET_DH : thuoc
+    
+    KHACH_HANG {
+        int maKH PK
+        string hoTen
+        string dienThoai
+    }
+    DON_HANG {
+        int maDH PK
+        date ngayDat
+        int maKH FK
+    }
+    SAN_PHAM {
+        int maSP PK
+        string tenSP
+        float donGia
+    }
+```</pre>
+                        </div>
+                        <div class="diagram-render">
+                            <div class="mermaid">
+                                erDiagram
+                                KHACH_HANG ||--o{ DON_HANG : dat
+                                DON_HANG ||--|{ CHI_TIET_DH : chua
+                                SAN_PHAM ||--o{ CHI_TIET_DH : thuoc
+
+                                KHACH_HANG {
+                                int maKH PK
+                                string hoTen
+                                string dienThoai
+                                }
+                                DON_HANG {
+                                int maDH PK
+                                date ngayDat
+                                int maKH FK
+                                }
+                                SAN_PHAM {
+                                int maSP PK
+                                string tenSP
+                                float donGia
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>💡 Lưu ý:</strong> Mermaid được hỗ trợ bởi nhiều nền tảng như GitHub, GitLab, Notion, và
+                    các công cụ documentation. Bạn chỉ cần viết mã, hệ thống sẽ tự động render thành biểu đồ đẹp
+                    mắt!
+                </div>
+            </div>
+
+
+
+            <div class="section">
+                <h2>🎯 Lợi ích cụ thể</h2>
+                <ul class="benefit-list">
+                    <li><strong>Không bao giờ mất dữ liệu:</strong> Mọi phiên bản đều được lưu, có thể xem lại ai
+                        sửa gì
+                        khi nào, khôi phục lại phiên bản cũ dễ dàng</li>
+
+                    <li><strong>Làm việc song song hiệu quả:</strong> Mỗi người làm tệp riêng → không chờ đợi, tự
+                        động
+                        hợp nhất → không cần sao chép-dán thủ công</li>
+
+                    <li><strong>Tài liệu đẹp và chuyên nghiệp:</strong> Trang web tự động, có tìm kiếm, trình đơn,
+                        thân
+                        thiện với điện thoại, có thể xuất ra Văn bản khi cần nộp</li>
+
+                    <li><strong>Dễ tìm kiếm:</strong> Tìm kiếm toàn bộ tài liệu ngay trên trang web, không cần mở
+                        từng
+                        tệp Văn bản .docx</li>
+
+                    <li><strong>Minh bạch:</strong> Biết chính xác ai viết phần nào, truy vết được lịch sử thay đổi
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>📄 Khi nào cần tệp Văn bản?</h2>
+                <div class="success-box">
+                    <p><strong>Đừng lo! Vẫn xuất được Văn bản khi cần:</strong></p>
+
+                    <h3>Tự động:</h3>
+                    <ul>
+                        <li>Mỗi lần có thay đổi → tự động tạo tệp Văn bản</li>
+                        <li>Tải xuống từ hệ thống tự động</li>
+                    </ul>
+
+                    <h3>Thủ công:</h3>
+                    <ul>
+                        <li>Chạy lệnh đơn giản → có ngay tệp Văn bản</li>
+                        <li>Công nghệ thông tin sẽ thiết lập sẵn</li>
+                    </ul>
+
+                    <h3>Khi nào dùng Văn bản:</h3>
+                    <ul>
+                        <li>Nộp cho khách hàng</li>
+                        <li>In tài liệu</li>
+                        <li>Ký duyệt chính thức</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚡ Quy tắc vàng:</strong> Làm việc trên Đánh dấu, chỉ xuất Văn bản khi cần giao sản phẩm
+                    cuối.
+                </div>
+            </div>
+
+
+            <div class="section">
+                <h2>❓ Câu hỏi thường gặp</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">Hỏi: Tôi không biết lập trình, có làm được không?</div>
+                    <div class="faq-answer">Đáp: Hoàn toàn được! Đánh dấu đơn giản hơn Văn bản. Bạn chỉ cần biết gõ
+                        chữ.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Hỏi: Mất bao lâu để học?</div>
+                    <div class="faq-answer">Đáp: 15-30 phút để học Đánh dấu. 1-2 giờ để quen với Ứng dụng quản lý và
+                        Trình soạn thảo.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Hỏi: Nếu làm sai thì sao?</div>
+                    <div class="faq-answer">Đáp: Không sao cả! Mọi thứ đều có thể hoàn tác. Hệ thống giống như có
+                        nút
+                        "Hoàn tác" vô hạn.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Hỏi: Có phải gõ dòng lệnh không?</div>
+                    <div class="faq-answer">Đáp: Không! Dùng Ứng dụng quản lý (giao diện đồ họa) nên rất dễ.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Hỏi: Tôi vẫn thích Văn bản hơn?</div>
+                    <div class="faq-answer">Đáp: Không sao, vẫn có thể xuất ra Văn bản .docx. Nhưng dùng markdown có
+                        hiệu quả cho dự án lớn nhiều tài liệu, nhiều người làm chung!</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Hỏi: Nếu mạng mất?</div>
+                    <div class="faq-answer">Đáp: Vẫn viết được ngoại tuyến, đồng bộ lên sau khi có mạng.</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎓 Kết luận</h2>
+                <div class="success-box">
+                    <p><strong>Chuyển sang Markdown + Phần mềm quản lý phiên bản + Trang tài liệu sẽ:</strong></p>
+                    <ul class="benefit-list">
+                        <li>Giải quyết hết vấn đề xung đột, mất dữ liệu</li>
+                        <li>Quản lý phiên bản chuyên nghiệp</li>
+                        <li>Làm việc nhóm hiệu quả hơn</li>
+                        <li>Tài liệu đẹp, dễ tìm kiếm</li>
+                        <li>Vẫn xuất được Văn bản khi cần</li>
+                    </ul>
+
+                    <p style="margin-top: 1rem;"><strong>Đầu tư:</strong> 1-2 giờ làm quen</p>
+                    <p><strong>Lợi ích:</strong> Sử dụng lâu dài, tiết kiệm hàng trăm giờ</p>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+
+</html>
