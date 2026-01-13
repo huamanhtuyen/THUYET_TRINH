@@ -481,6 +481,67 @@
             font-style: italic;
             margin-top: 10px;
         }
+
+        /* Hardware visualization */
+        .hardware-grid {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .server-box {
+            background: linear-gradient(145deg, #e2e8f0, #cbd5e0);
+            border: 3px solid #718096;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .server-box.big {
+            background: linear-gradient(145deg, #fefcbf, #ecc94b);
+            border-color: #d69e2e;
+            min-width: 200px;
+        }
+
+        .server-box.medium {
+            background: linear-gradient(145deg, #bee3f8, #90cdf4);
+            border-color: #3182ce;
+        }
+
+        .server-box.small {
+            background: linear-gradient(145deg, #c6f6d5, #9ae6b4);
+            border-color: #38a169;
+            min-width: 100px;
+            padding: 15px;
+        }
+
+        .server-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .server-box.small .server-icon {
+            font-size: 32px;
+        }
+
+        .server-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .server-spec {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .server-box.small .server-spec {
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
@@ -740,9 +801,62 @@
             </div>
         </div>
 
-        <!-- Slide 7: Conclusion -->
+        <!-- Slide 6b: Phần cứng đúng cho Microservices -->
         <div class="slide">
-            <div class="slide-number">7/7</div>
+            <div class="slide-number">6b/8</div>
+            <h2>Phần cứng cho Hệ thống Kết hợp</h2>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <span style="background: #48bb78; color: white; padding: 10px 20px; border-radius: 20px; font-weight: 600;">
+                    ✅ Monolith cho nhẹ + Microservices cho nặng
+                </span>
+            </div>
+            <div class="hardware-grid">
+                <div class="server-box big">
+                    <div class="server-icon">🖥️</div>
+                    <div class="server-label">Database Server</div>
+                    <div class="server-spec">Cần nhiều RAM, SSD</div>
+                </div>
+                <div class="server-box medium">
+                    <div class="server-icon">🔄</div>
+                    <div class="server-label">Event Bus</div>
+                    <div class="server-spec">Cần CPU, Network</div>
+                </div>
+                <div class="server-box medium">
+                    <div class="server-icon">⚙️</div>
+                    <div class="server-label">Microservice</div>
+                    <div class="server-spec">Nghiệp vụ nặng</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin: 15px 0;">
+                <span style="font-size: 24px;">⬇️</span>
+            </div>
+            <div class="hardware-grid">
+                <div class="server-box big" style="background: linear-gradient(145deg, #e9d8fd, #d6bcfa); border-color: #805ad5;">
+                    <div class="server-icon">🏛️</div>
+                    <div class="server-label">Monolith Server</div>
+                    <div class="server-spec">Các service nhẹ: Report, Notify, Email, Log, Search...</div>
+                </div>
+            </div>
+            <div style="background: #e6fffa; padding: 20px; border-radius: 12px; border-left: 5px solid #38b2ac; margin-top: 20px;">
+                <div style="font-size: 18px; color: #234e52; line-height: 1.8;">
+                    <strong>💡 Nguyên tắc:</strong> Chỉ tách MICROSERVICE khi cần: phát triển độc lập, triển khai độc lập, mở rộng độc lập, chịu lỗi độc lập<br>
+                    <strong>✅ Lợi ích:</strong> Đơn giản cho service nhẹ, mạnh cho service nặng, tối ưu chi phí
+                </div>
+            </div>
+            <div class="notes">
+                <div class="notes-toggle" onclick="toggleNotes(this)">
+                    <span>📝 Ghi chú diễn giả</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="notes-content">
+                    Theo các tác giả như Sam Newman (Building Microservices), không nhất thiết phải tách TOÀN BỘ thành microservices. Các service nhẹ (report, notify, email, log, search) có thể vẫn nằm trong monolith để đơn giản. Chỉ tách ra microservice khi thực sự cần: nhiều team phát triển, cần scale khác nhau, hoặc cần deploy độc lập. Đây gọi là <strong>Modular Monolith</strong> - vừa đơn giản vừa mạnh mẽ.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Conclusion -->
+        <div class="slide">
+            <div class="slide-number">8/8</div>
             <h2>Kết luận</h2>
             <div class="conclusion-box">
                 <div class="conclusion-icon">🎯</div>
@@ -766,7 +880,7 @@
                 <div style="flex: 1; background: #fff5f5; padding: 25px; border-radius: 12px; border: 3px solid #fc8181;">
                     <div style="font-size: 22px; font-weight: 700; color: #742a2a; margin-bottom: 15px;">❌ Tránh:</div>
                     <div style="font-size: 16px; color: #742a2a; line-height: 1.8;">
-                        • Microservices vì "xu hướng thời thược"<br>
+                        • Microservices vì "xu hướng thời thượng"<br>
                         • Tách service cho mọi thứ<br>
                         • Phần mềm Micro, cứng Mono (phần mềm một nẻo, phầm cứng một nẻo)<br>
                         • Distributed Monolith
