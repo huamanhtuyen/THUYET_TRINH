@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiết kế sai → Mua sắm sai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            display: none;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #2d3748;
+            margin-bottom: 40px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        h2 {
+            font-size: 36px;
+            color: #4a5568;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .arch-comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .arch-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .arch-diagram {
+            width: 100%;
+            height: 280px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .box {
+            border-radius: 12px;
+            padding: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .monolith-box {
+            background: #48bb78;
+            color: white;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .dist-monolith-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .service-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .small-service {
+            background: #4299e1;
+            color: white;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            border-radius: 8px;
+        }
+
+        .shared-db {
+            background: #f56565;
+            color: white;
+            width: 200px;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .micro-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .micro-unit {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .micro-service {
+            background: #4299e1;
+            color: white;
+            width: 80px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .micro-db {
+            background: #48bb78;
+            color: white;
+            width: 60px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            border-radius: 8px;
+        }
+
+        .arch-label {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+
+        .timeline-item {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            z-index: 1;
+            flex: 1;
+            margin: 0 10px;
+            border: 3px solid #667eea;
+        }
+
+        .timeline-year {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .timeline-text {
+            font-size: 16px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .myth-box {
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(245, 101, 101, 0.3);
+        }
+
+        .myth-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .myth-text {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .reality-box {
+            background: #edf2f7;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 6px solid #48bb78;
+        }
+
+        .reality-text {
+            font-size: 20px;
+            color: #2d3748;
+            line-height: 1.8;
+        }
+
+        .problem-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .problem-visual {
+            background: #fff5f5;
+            border: 3px dashed #fc8181;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .event-bus {
+            background: #2d3748;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .services-chaos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .tiny-service {
+            background: #fc8181;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            animation: shake 2s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px) rotate(-2deg); }
+            75% { transform: translateX(2px) rotate(2deg); }
+        }
+
+        .warning-text {
+            font-size: 22px;
+            color: #c53030;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+        .comparison-table {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-col {
+            flex: 1;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .bad {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border: 3px solid #fc8181;
+        }
+
+        .worse {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            border: 3px solid #e53e3e;
+        }
+
+        .col-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .col-content {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .conclusion-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 40px 0;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .conclusion-icon {
+            font-size: 100px;
+            margin-bottom: 30px;
+        }
+
+        .conclusion-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .conclusion-text {
+            font-size: 24px;
+            line-height: 1.8;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            background: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .notes {
+            background: #f7fafc;
+            border-top: 3px solid #667eea;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .notes-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .notes-content {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            color: #e53e3e;
+            font-weight: 700;
+        }
+
+        .citation {
+            font-size: 12px;
+            color: #718096;
+            font-style: italic;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="slide-number">1/7</div>
+            <h1>🏗️ Phong cách kiến trúc sai<br>→ Mua sắm phần cứng sai</h1>
+            <div style="flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 40px;">
+                <div style="font-size: 120px;">⚠️</div>
+                <div style="font-size: 28px; color: #4a5568; text-align: center; line-height: 1.8;">
+                    Khi kiến trúc phần mềm không phù hợp<br>
+                    → Đầu tư hạ tầng sai hoàn toàn
+                </div>
+            </div>
+            <div class="notes">
+                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-content">
+                    Chào anh em! Hôm nay chúng ta sẽ nói về một vấn đề khá phổ biến gần đây: thiết kế kiến trúc hệ thống không đúng dẫn đến việc mua sắm phần cứng sai lầm, lãng phí ngân sách và tạo ra nhiều vấn đề về hiệu năng cũng như chi phí phát triển phần mềm.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: 3 Architectures -->
+        <div class="slide">
+            <div class="slide-number">2/7</div>
+            <h2>3 phong cách kiến trúc phổ biến</h2>
+            <div class="arch-comparison">
+                <div class="arch-item">
+                    <div class="arch-diagram">
+                        <div class="monolith-box">
+                            ỨNG DỤNG<br>TOÀN BỘ
+                        </div>
+                    </div>
+                    <div class="arch-label">✅ Monolith</div>
+                </div>
+                <div class="arch-item">
+                    <div class="arch-diagram">
+                        <div class="dist-monolith-container">
+                            <div class="service-row">
+                                <div class="small-service">SV1</div>
+                                <div class="small-service">SV2</div>
+                                <div class="small-service">SV3</div>
+                            </div>
+                            <div class="service-row">
+                                <div class="small-service">SV4</div>
+                                <div class="small-service">SV5</div>
+                                <div class="small-service">SV6</div>
+                            </div>
+                            <div class="shared-db">DATABASE CHUNG</div>
+                        </div>
+                    </div>
+                    <div class="arch-label">❌ Distributed Monolith</div>
+                </div>
+                <div class="arch-item">
+                    <div class="arch-diagram">
+                        <div class="micro-container">
+                            <div class="micro-unit">
+                                <div class="micro-service">Service A</div>
+                                <div class="micro-db">DB A</div>
+                            </div>
+                            <div class="micro-unit">
+                                <div class="micro-service">Service B</div>
+                                <div class="micro-db">DB B</div>
+                            </div>
+                            <div class="micro-unit">
+                                <div class="micro-service">Service C</div>
+                                <div class="micro-db">DB C</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="arch-label">✅ Microservices</div>
+                </div>
+            </div>
+            <div class="notes">
+                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-content">
+                    Ba kiến trúc chính: <strong>Monolith</strong> là ứng dụng nguyên khối đơn giản. <strong>Distributed Monolith</strong> là sai lầm khi tách service nhưng vẫn dùng chung database. <strong>Microservices</strong> là mỗi service độc lập hoàn toàn với database riêng.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: History -->
+        <div class="slide">
+            <div class="slide-number">3/7</div>
+            <h2>Lịch sử & Tư tưởng Microservices</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">~2005</div>
+                    <div class="timeline-text">
+                        <strong>Vấn đề:</strong> Ứng dụng lớn khó bảo trì, deploy toàn bộ mỗi lần thay đổi nhỏ
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2011-2014</div>
+                    <div class="timeline-text">
+                        <strong>Ra đời:</strong> Netflix, Amazon áp dụng thành công kiến trúc service nhỏ, độc lập
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">Ngày nay</div>
+                    <div class="timeline-text">
+                        <strong>Mục đích:</strong> Phát triển độc lập, mở rộng linh hoạt, chịu lỗi tốt hơn
+                    </div>
+                </div>
+            </div>
+            <div style="background: #e6fffa; padding: 30px; border-radius: 15px; border-left: 6px solid #38b2ac;">
+                <div style="font-size: 20px; color: #234e52; line-height: 1.8;">
+                    <strong>💡 Tư tưởng cốt lõi:</strong> Chia nhỏ hệ thống thành các service có thể <span class="highlight">phát triển, deploy, mở rộng độc lập</span> với nhau
+                </div>
+                <div class="citation">
+                    Nguồn: Martin Fowler - "Microservices: a definition of this new architectural term" (2014)
+                </div>
+            </div>
+            <div class="notes">
+                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-content">
+                    Microservices xuất hiện để giải quyết vấn đề của ứng dụng lớn. Mục tiêu là cho phép các team làm việc độc lập, triển khai không ảnh hưởng lẫn nhau, và mở rộng từng phần theo nhu cầu thực tế (ngoài ra còn có thể chịu lỗi độc lập).
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Myth -->
+        <div class="slide">
+            <div class="slide-number">4/7</div>
+            <h2>Hiểu lầm phổ biến</h2>
+            <div class="myth-box">
+                <div class="">🚫</div>
+                <div class="myth-text">Microservices = Thay thế hoàn toàn Monolith</div>
+            </div>
+            <div class="reality-box">
+                <div style="font-size: 28px; font-weight: 700; margin-bottom: 0px; color: #2d3748;">
+                    ✅ Thực tế là:
+                </div>
+                <div class="reality-text">
+                    • Monolith vẫn rất tốt cho <strong>hệ thống nhỏ, team nhỏ</strong><br>
+                    • Chỉ nên chuyển sang Microservices khi <strong>thực sự cần thiết</strong><br>
+                    • Nhiều công ty thành công vẫn dùng Monolith (ví dụ: Basecamp)<br>
+                    • Microservices tốn nhiều chi phí vận hành, phức tạp hơn rất nhiều
+                </div>
+            </div>
+            <div class="notes">
+                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-content">
+                    Đây là hiểu lầm nguy hiểm nhất! Microservices KHÔNG phải là giải pháp cho mọi vấn đề. Với hệ thống nhỏ, team nhỏ, Monolith đơn giản hơn và hiệu quả hơn nhiều. Chỉ khi hệ thống đủ lớn, có nhiều team, cần mở rộng khác nhau cho từng phần thì mới nên xem xét Microservices.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Problem 1 -->
+        <div class="slide">
+            <div class="slide-number">5/7</div>
+            <h2>Sai lầm #1: Microservices cho mọi thứ</h2>
+            <div class="problem-container">
+                <div class="problem-visual">
+                    <div style="font-size: 24px; font-weight: 700; color: #c53030; margin-bottom: 20px;">
+                        Làm Microservices cho cả nghiệp vụ ÍT TẢI
+                    </div>
+                    <div class="event-bus">📡 EVENT BUS</div>
+                    <div class="services-chaos">
+                        <div class="tiny-service">S1</div>
+                        <div class="tiny-service">S2</div>
+                        <div class="tiny-service">S3</div>
+                        <div class="tiny-service">S4</div>
+                        <div class="tiny-service">S5</div>
+                        <div class="tiny-service">S6</div>
+                        <div class="tiny-service">S7</div>
+                        <div class="tiny-service">S8</div>
+                        <div class="tiny-service">S9</div>
+                        <div class="tiny-service">S10</div>
+                        <div class="tiny-service">S11</div>
+                        <div class="tiny-service">S12</div>
+                        <div class="tiny-service">S13</div>
+                        <div class="tiny-service">S14</div>
+                        <div class="tiny-service">S15</div>
+                        <div class="tiny-service">S16</div>
+                        <div class="tiny-service">S17</div>
+                        <div class="tiny-service">S18</div>
+                        <div class="tiny-service">S19</div>
+                        <div class="tiny-service">S20</div>
+                        <div class="tiny-service">...</div>
+                        <div class="tiny-service">999</div>
+                    </div>
+                    <div class="warning-text">⚠️ Hàng chục ngàn service nhỏ cắm vào Event Bus!</div>
+                </div>
+                <div style="background: #fffaf0; padding: 25px; border-radius: 12px; border-left: 5px solid #dd6b20;">
+                    <div style="font-size: 20px; color: #744210; line-height: 1.8;">
+                        <strong>❌ Hậu quả:</strong><br>
+                        • Phức tạp không cần thiết<br>
+                        • Chi phí vận hành cao<br>
+                        • Khó debug, khó theo dõi<br>
+                        • Lãng phí tài nguyên
+                    </div>
+                </div>
+            </div>
+            <div class="notes">
+                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-content">
+                    Sai lầm phổ biến là tách TOÀN BỘ thành microservices, kể cả những phần ít người dùng, không cần mở rộng. Kết quả là hàng chục, hàng trăm service nhỏ cắm vào Event Bus tạo ra sự phức tạp khủng khiếp, tốn chi phí vận hành, và khó quản lý.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Problem 2 -->
+        <div class="slide">
+            <div class="slide-number">6/7</div>
+            <h2>Sai lầm #2: Phần mềm Micro, phần cứng Mono</h2>
+            <div class="comparison-table">
+                <div class="comparison-col bad">
+                    <div class="col-title" style="color: #c53030;">😕 Monolith</div>
+                    <div class="col-content" style="color: #2d3748;">
+                        • Khó mở rộng<br>
+                        • Deploy cả hệ thống<br>
+                        • Một lỗi ảnh hưởng toàn bộ<br>
+                        <br>
+                        <strong>Nhưng:</strong> Đơn giản, dễ quản lý với hệ thống nhỏ
+                    </div>
+                </div>
+                <div class="comparison-col worse">
+                    <div class="col-title">💀 Distributed Monolith</div>
+                    <div class="col-content">
+                        • Tách service NHƯNG chung DB<br>
+                        • Mua 1 máy chủ DB lớn cho tất cả<br>
+                        • Không quan tâm đến:<br>
+                        &nbsp;&nbsp;→ Mở rộng độc lập<br>
+                        &nbsp;&nbsp;→ Triển khai riêng<br>
+                        &nbsp;&nbsp;→ Chịu lỗi<br>
+                        &nbsp;&nbsp;→ Phát triển độc lập<br>
+                        <br>
+                        <strong class="highlight">= TỆ HƠN Monolith!</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="notes">
+                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-content">
+                    Đây là sai lầm TỆ HẠI nhất! Làm microservices ở tầng ứng dụng nhưng dùng 1 máy chủ database chung. Kết quả là <strong>Distributed Monolith</strong> - có đủ nhược điểm của Monolith CỘNG THÊM độ phức tạp của Microservices. Database chung = không thể mở rộng độc lập, không chịu lỗi, và vẫn phải deploy cẩn thận vì ảnh hưởng lẫn nhau.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Conclusion -->
+        <div class="slide">
+            <div class="slide-number">7/7</div>
+            <h2>Kết luận</h2>
+            <div class="conclusion-box">
+                <div class="conclusion-icon">🎯</div>
+                <div class="conclusion-title">Kiến trúc sai → Đầu tư sai</div>
+                <div class="conclusion-text">
+                    Thiết kế kiến trúc không phù hợp<br>
+                    ↓<br>
+                    Mua sắm phần cứng sai hoàn toàn<br>
+                    ↓<br>
+                    Lãng phí ngân sách + Hiệu năng kém
+                </div>
+            </div>
+            <div style="display: flex; gap: 30px; margin-top: 30px;">
+                <div style="flex: 1; background: #f0fff4; padding: 25px; border-radius: 12px; border: 3px solid #48bb78;">
+                    <div style="font-size: 22px; font-weight: 700; color: #22543d; margin-bottom: 15px;">✅ Nên làm:</div>
+                    <div style="font-size: 16px; color: #22543d; line-height: 1.8;">
+                        • Đánh giá nhu cầu thực tế<br>
+                        • Bắt đầu đơn giản (Monolith)<br>
+                        • Chuyển Microservices khi CẦN<br>
+                        • Đồng bộ phần mềm + phần cứng
+                    </div>
+                </div>
+                <div style="flex: 1; background: #fff5f5; padding: 25px; border-radius: 12px; border: 3px solid #fc8181;">
+                    <div style="font-size: 22px; font-weight: 700; color: #742a2a; margin-bottom: 15px;">❌ Tránh:</div>
+                    <div style="font-size: 16px; color: #742a2a; line-height: 1.8;">
+                        • Microservices vì "trendy"<br>
+                        • Tách service cho mọi thứ<br>
+                        • Phần mềm Micro, cứng Mono<br>
+                        • Distributed Monolith
+                    </div>
+                </div>
+            </div>
+            <div class="notes">
+                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-content">
+                    Tóm lại: Thiết kế kiến trúc PHẢI phù hợp với nhu cầu thực tế. Không nên chạy theo xu hướng. Hãy bắt đầu đơn giản, đo lường hiệu năng, và chỉ chuyển sang phức tạp hơn khi thực sự cần thiết. Phần cứng và phần mềm phải đi cùng nhau để tối ưu hiệu quả đầu tư.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">◀ Trước</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Tiếp ▶</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            updateButtons();
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize
+        updateButtons();
+    </script>
+</body>
+</html>
