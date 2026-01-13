@@ -418,11 +418,49 @@
         .notes {
             background: #f7fafc;
             border-top: 3px solid #667eea;
-            padding: 25px;
-            margin-top: 30px;
+            padding: 0;
+            margin-top: 20px;
             border-radius: 10px;
-            max-height: 150px;
-            overflow-y: auto;
+            overflow: hidden;
+        }
+
+        .notes-toggle {
+            background: #667eea;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+
+        .notes-toggle:hover {
+            background: #5a67d8;
+        }
+
+        .notes-toggle .arrow {
+            transition: transform 0.3s;
+            font-size: 12px;
+        }
+
+        .notes-toggle.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .notes-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #f7fafc;
+            padding: 0 20px;
+        }
+
+        .notes-content.open {
+            max-height: 200px;
+            padding: 20px;
         }
 
         .notes-title {
@@ -465,7 +503,10 @@
                 </div>
             </div>
             <div class="notes">
-                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-toggle" onclick="toggleNotes(this)">
+                    <span>📝 Ghi chú diễn giả</span>
+                    <span class="arrow">▼</span>
+                </div>
                 <div class="notes-content">
                     Chào anh em! Hôm nay chúng ta sẽ nói về một vấn đề khá phổ biến gần đây: thiết kế kiến trúc hệ thống không đúng dẫn đến việc mua sắm phần cứng sai lầm, lãng phí ngân sách và tạo ra nhiều vấn đề về hiệu năng cũng như chi phí phát triển phần mềm.
                 </div>
@@ -524,7 +565,10 @@
                 </div>
             </div>
             <div class="notes">
-                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-toggle" onclick="toggleNotes(this)">
+                    <span>📝 Ghi chú diễn giả</span>
+                    <span class="arrow">▼</span>
+                </div>
                 <div class="notes-content">
                     Ba kiến trúc chính: <strong>Monolith</strong> là ứng dụng nguyên khối đơn giản. <strong>Distributed Monolith</strong> là sai lầm khi tách service nhưng vẫn dùng chung database. <strong>Microservices</strong> là mỗi service độc lập hoàn toàn với database riêng.
                 </div>
@@ -564,7 +608,10 @@
                 </div>
             </div>
             <div class="notes">
-                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-toggle" onclick="toggleNotes(this)">
+                    <span>📝 Ghi chú diễn giả</span>
+                    <span class="arrow">▼</span>
+                </div>
                 <div class="notes-content">
                     Microservices xuất hiện để giải quyết vấn đề của ứng dụng lớn. Mục tiêu là cho phép các team làm việc độc lập, triển khai không ảnh hưởng lẫn nhau, và mở rộng từng phần theo nhu cầu thực tế (ngoài ra còn có thể chịu lỗi độc lập).
                 </div>
@@ -591,7 +638,10 @@
                 </div>
             </div>
             <div class="notes">
-                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-toggle" onclick="toggleNotes(this)">
+                    <span>📝 Ghi chú diễn giả</span>
+                    <span class="arrow">▼</span>
+                </div>
                 <div class="notes-content">
                     Đây là hiểu lầm nguy hiểm nhất! Microservices KHÔNG phải là giải pháp cho mọi vấn đề. Với hệ thống nhỏ, team nhỏ, Monolith đơn giản hơn và hiệu quả hơn nhiều. Chỉ khi hệ thống đủ lớn, có nhiều team, cần mở rộng khác nhau cho từng phần thì mới nên xem xét Microservices.
                 </div>
@@ -645,7 +695,10 @@
                 </div>
             </div>
             <div class="notes">
-                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-toggle" onclick="toggleNotes(this)">
+                    <span>📝 Ghi chú diễn giả</span>
+                    <span class="arrow">▼</span>
+                </div>
                 <div class="notes-content">
                     Sai lầm phổ biến là tách TOÀN BỘ thành microservices, kể cả những phần ít người dùng, không cần mở rộng. Kết quả là hàng chục, hàng trăm service nhỏ cắm vào Event Bus tạo ra sự phức tạp khủng khiếp, tốn chi phí vận hành, và khó quản lý.
                 </div>
@@ -683,7 +736,10 @@
                 </div>
             </div>
             <div class="notes">
-                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-toggle" onclick="toggleNotes(this)">
+                    <span>📝 Ghi chú diễn giả</span>
+                    <span class="arrow">▼</span>
+                </div>
                 <div class="notes-content">
                     Đây là sai lầm TỆ HẠI nhất! Làm microservices ở tầng ứng dụng nhưng dùng 1 máy chủ database chung. Kết quả là <strong>Distributed Monolith</strong> - có đủ nhược điểm của Monolith CỘNG THÊM độ phức tạp của Microservices. Database chung = không thể mở rộng độc lập, không chịu lỗi, và vẫn phải deploy cẩn thận vì ảnh hưởng lẫn nhau.
                 </div>
@@ -726,7 +782,10 @@
                 </div>
             </div>
             <div class="notes">
-                <div class="notes-title">📝 Ghi chú diễn giả:</div>
+                <div class="notes-toggle" onclick="toggleNotes(this)">
+                    <span>📝 Ghi chú diễn giả</span>
+                    <span class="arrow">▼</span>
+                </div>
                 <div class="notes-content">
                     Tóm lại: Thiết kế kiến trúc PHẢI phù hợp với nhu cầu thực tế. Không nên chạy theo xu hướng. Hãy bắt đầu đơn giản, đo lường hiệu năng, và chỉ chuyển sang phức tạp hơn khi thực sự cần thiết. Phần cứng và phần mềm phải đi cùng nhau để tối ưu hiệu quả đầu tư.
                 </div>
@@ -769,6 +828,13 @@
                 changeSlide(-1);
             }
         });
+
+        // Toggle notes
+        function toggleNotes(element) {
+            element.classList.toggle('active');
+            const content = element.nextElementSibling;
+            content.classList.toggle('open');
+        }
 
         // Initialize
         updateButtons();
