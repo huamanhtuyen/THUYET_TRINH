@@ -14,22 +14,23 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            overflow: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
         }
 
         .slide-container {
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            min-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
+            padding: 40px 0;
             position: relative;
         }
 
         .slide {
             width: 90%;
             max-width: 1200px;
-            height: 85vh;
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -37,7 +38,7 @@
             display: none;
             flex-direction: column;
             position: relative;
-            overflow-y: auto;
+            margin-bottom: 20px;
         }
 
         .slide.active {
@@ -64,7 +65,7 @@
         h2 {
             font-size: 32px;
             color: #4a5568;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
@@ -360,27 +361,30 @@
         .conclusion-box {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 20px 30px;
             border-radius: 15px;
-            text-align: center;
-            margin: 20px 0;
+            margin: 10px 0 20px 0;
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .conclusion-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
+            font-size: 48px;
+            flex-shrink: 0;
         }
 
         .conclusion-title {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 15px;
+            flex-shrink: 0;
         }
 
         .conclusion-text {
-            font-size: 20px;
-            line-height: 1.8;
+            font-size: 16px;
+            line-height: 1.6;
+            flex: 1;
         }
 
         .controls {
@@ -745,10 +749,8 @@
                 <div class="conclusion-title">Kiến trúc sai → Đầu tư sai</div>
                 <div class="conclusion-text">
                     Thiết kế kiến trúc không phù hợp<br>
-                    ↓<br>
-                    Mua sắm phần cứng sai hoàn toàn<br>
-                    ↓<br>
-                    Lãng phí ngân sách + Hiệu năng kém
+                    → Mua sắm phần cứng sai hoàn toàn<br>
+                    → Lãng phí ngân sách + Hiệu năng kém
                 </div>
             </div>
             <div style="display: flex; gap: 0px; margin-top: 0px;">
