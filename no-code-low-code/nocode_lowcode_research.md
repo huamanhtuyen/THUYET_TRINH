@@ -94,6 +94,77 @@
 
 ---
 
+### 🟣 NHÓM 4: Chuyên biệt theo Domain — AI, Workflow Orchestration, Game/Simulation
+
+Đây là nhóm **không được nhắc đến trong định nghĩa LCNC truyền thống** nhưng thực sự là no-code/low-code theo nghĩa rộng — phù hợp cho các bài toán chuyên sâu.
+
+---
+
+#### 🔵 Temporal.io — Workflow Orchestration (Durable Execution)
+
+| Tiêu chí | Chi tiết |
+|---|---|
+| **Bản chất** | Không phải low-code thuần — là nền tảng **lập trình bền vững** (durable execution) cho microservices, job scheduling, long-running process |
+| **Open Source** | ✅ **MIT License** — hoàn toàn miễn phí, self-host |
+| **Self-host** | ✅ Có thể deploy on-premise (Docker, K8s) |
+| **Phù hợp với** | Dev team xây hệ thống **tự động hóa phức tạp**: duyệt văn bản nhiều bước, retry logic, saga pattern |
+| **Không phù hợp** | Citizen developer — cần viết code (Go/Java/Python/TypeScript) |
+| **Cạnh tranh** | n8n, Camunda, Apache Airflow, Kestra |
+| **Nhà nước VN** | ⚠️ Cần IT team mạnh; không thể self-service; nhưng rất mạnh cho hệ thống critical |
+
+> **Kết luận**: Temporal là *infrastructure*, không phải LCNC tool cho người dùng cuối. Tuy nhiên có thể **dùng làm backend engine** cho một sản phẩm LCNC workflow bán cho nhà nước. Tốt hơn dùng **n8n** hoặc **Camunda** nếu muốn có UI no-code.
+
+---
+
+#### 🟠 LangChain / LangFlow — AI Application Builder (No-Code for AI)
+
+| Tiêu chí | Chi tiết |
+|---|---|
+| **LangChain** | Framework code Python/JS để xây LLM apps — **không phải no-code** |
+| **LangFlow** | ✅ **UI no-code trực quan** trên nền LangChain — kéo thả node để build AI pipeline |
+| **License** | ✅ **MIT License** — miễn phí hoàn toàn |
+| **Self-host** | ✅ Deploy bằng Docker hoặc Python, không cần cloud nước ngoài |
+| **Tính năng** | Xây chatbot, RAG (Retrieval-Augmented Generation), AI agent, xử lý tài liệu — bằng kéo thả |
+| **Export** | Workflow xuất JSON, deploy thành REST API endpoint |
+| **Mở rộng** | Viết custom component bằng Python nếu cần |
+| **Nhà nước VN** | ✅ Rất tiềm năng — build **chatbot hỏi đáp chính sách**, **xử lý văn bản hành chính tự động** |
+
+> **Kết luận**: Đưa vào danh sách open source ✅ — đặc biệt phù hợp cho bài toán **AI + chính phủ số**: chatbot cổng dịch vụ công, tóm tắt văn bản tự động, tìm kiếm ngữ nghĩa trong kho tài liệu nhà nước.
+
+**So sánh các tool AI no-code khác:**
+| Tool | License | Self-host | Đặc điểm |
+|---|---|---|---|
+| **LangFlow** | MIT | ✅ | Kéo thả, LangChain-based, AI pipeline |
+| **Flowise** | MIT | ✅ | Tương tự LangFlow, nhẹ hơn, dễ setup hơn |
+| **Dify.ai** | Apache 2.0 | ✅ | LLM app platform, có UI quản lý prompt/RAG đẹp hơn |
+| **n8n + AI nodes** | Fair Code | ✅ | Kết hợp workflow automation + AI |
+
+---
+
+#### 🟤 Unreal Engine Blueprint — Visual Scripting (Game/Simulation/VR)
+
+| Tiêu chí | Chi tiết |
+|---|---|
+| **Bản chất** | Hệ thống **lập trình trực quan dạng node** trong Unreal Engine — thay thế C++ cho logic game/app |
+| **License** | ⚠️ **KHÔNG phải open source** — EULA của Epic Games |
+| **Dùng miễn phí?** | ✅ Miễn phí download và sử dụng |
+| **Royalty** | Game: **5% royalty** sau $1M doanh thu đầu tiên |
+| **Non-game (enterprise/gov)** | ⚠️ Yêu cầu **per-seat subscription** nếu công ty >$1M/năm doanh thu |
+| **Chính phủ** | Phải tuân theo EULA như doanh nghiệp — liên hệ Epic Games để custom enterprise agreement |
+| **Phù hợp với** | Mô phỏng, đào tạo thực tế ảo (VR training), digital twin, visualization 3D |
+| **Nhà nước VN** | ⚠️ Tiềm năng cho **đào tạo VR quân sự, y tế, cứu hỏa** nhưng cần license Enterprise |
+
+> **Kết luận**: Blueprint **KHÔNG vào được danh sách open source**. Là công cụ visual scripting rất mạnh cho simulation/VR, nhưng cần thương lượng license với Epic Games trong dự án nhà nước. Nguồn mở thay thế gần nhất: **Godot Engine** (MIT License) với GDScript visual scripting.
+
+**So sánh với các visual scripting engine khác:**
+| Engine | License | Blueprint/Visual | Phù hợp nhà nước |
+|---|---|---|---|
+| **Unreal Engine Blueprint** | EULA (có phí enterprise) | ✅ Rất mạnh | ⚠️ Cần license |
+| **Godot Engine** | MIT | ✅ VisualScript/GDScript | ✅ Free, open source |
+| **Unity (Visual Scripting)** | Unity ToS (subscription) | ✅ Shader Graph, Bolt | ⚠️ Phí từ $2k/năm |
+
+---
+
 ## 4. ⚠️ Rủi Ro & Thách Thức Cần Biết
 
 ### Rủi ro kỹ thuật
@@ -169,4 +240,4 @@ Trở thành Đối tác / Reseller của Zoho, Mendix, Power Apps
 
 ---
 
-*Nguồn tham khảo: Gartner LCAP Magic Quadrant 2024, Forrester Low-Code Platform Forecast 2024-2028, OutSystems Case Studies, McKinsey Digital Transformation Report, Quyết định 749/QĐ-TTg, Luật An ninh mạng 2018 (VN)*
+*Nguồn tham khảo: Gartner LCAP Magic Quadrant 2024, Forrester Low-Code Platform Forecast 2024-2028, OutSystems Case Studies, McKinsey Digital Transformation Report, Quyết định 749/QĐ-TTg, Luật An ninh mạng 2018 (VN), Temporal.io Docs (MIT License), LangFlow GitHub (MIT License), Unreal Engine EULA 2024, Epic Games Licensing FAQ*
