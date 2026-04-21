@@ -165,6 +165,32 @@
 
 ---
 
+#### 🔘 Notion — All-in-one Workspace (No-code Database & Wiki)
+
+| Tiêu chí | Chi tiết |
+|---|---|
+| **Bản chất** | Không phải LCNC app builder truyền thống — là **workspace cộng tác + no-code database** (wiki, kanban, bảng dữ liệu quan hệ, form, dashboard) |
+| **Open Source** | ❌ **Không** — SaaS thương mại hoàn toàn |
+| **Self-host** | ❌ **Không hỗ trợ** — toàn bộ dữ liệu ở trên cụm AWS của Notion |
+| **Pricing** | Free → Plus ($10/user) → Business ($15/user) → Enterprise (thương lượng, ~$20–30/user/tháng) |
+| **Data Residency** | ⚠️ Chỉ có ở gói **Enterprise** — có thể chọn region Asia-Pacific nhưng không phải server tại VN |
+| **Chứng chỉ** | SOC 2 Type 2, ISO 27001/27017/27018, GDPR |
+| **Tính năng** | Database quan hệ, Kanban, Gantt, form, wiki, Notion AI (tóm tắt, generate), API để tích hợp |
+| **Nhà nước VN** | ⚠️ **Rất khó** — không self-host, dữ liệu nước ngoài, không phù hợp Luật An ninh mạng 2018 |
+
+> **Kết luận**: Notion **KHÔNG vào được danh sách open source và cũng khó bán cho nhà nước VN** do không có self-host. Nhưng rất mạnh cho **nội bộ doanh nghiệp** (team wiki, OKR, quản lý dự án). Thay thế open source tương đương: **AppFlowy** (AGPL, self-host) hoặc **Outline** (BSL, self-host).
+
+**So sánh Notion với các workspace no-code khác:**
+| Tool | License | Self-host | Đặc điểm | Nhà nước VN |
+|---|---|---|---|---|
+| **Notion** | Commercial SaaS | ❌ | Workspace đẹp, Notion AI, phổ biến | ❌ Không phù hợp |
+| **AppFlowy** | AGPL v3 | ✅ | Clone Notion, self-host, offline | ✅ Tiềm năng |
+| **Outline** | BSL (self-host free) | ✅ | Wiki cho team, Markdown, real-time | ✅ Tốt cho wiki nội bộ |
+| **Docmost** | AGPL v3 | ✅ | Wiki + Notion-like, môi trường nhẹ | ✅ Mới, đang phát triển |
+| **AFFiNE** | MIT | ✅ | Notion + Figma hybrid, offline-first | ✅ Tiềm năng |
+
+---
+
 ## 4. ⚠️ Rủi Ro & Thách Thức Cần Biết
 
 ### Rủi ro kỹ thuật
