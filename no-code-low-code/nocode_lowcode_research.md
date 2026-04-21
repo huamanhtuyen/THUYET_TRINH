@@ -1,5 +1,5 @@
 # 🌐 Nghiên Cứu: Tình Hình Triển Khai No-Code / Low-Code Trên Thế Giới
-> Cập nhật: Tháng 4/2026 | Nguồn: Gartner, Forrester, OutSystems, Mendix, Appsmith, McKinsey
+> Người thực hiện: **Hứa Mạnh Tuyển** | Cập nhật: Tháng 4/2026 | Nguồn: Gartner, Forrester, OutSystems, Mendix, Appsmith, McKinsey
 
 ---
 
